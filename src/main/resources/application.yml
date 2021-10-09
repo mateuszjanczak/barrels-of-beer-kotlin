@@ -1,0 +1,14 @@
+# MongoDB
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: barrels-of-beer
+
+# Logging
+sentry:
+  logging:
+    minimum-event-level: info
+    minimum-breadcrumb-level: debug
+  dsn: <hidden>
+  traces-sample-rate: 1.0
