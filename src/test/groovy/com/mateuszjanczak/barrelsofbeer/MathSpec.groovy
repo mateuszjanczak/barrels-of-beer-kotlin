@@ -2,7 +2,7 @@ package com.mateuszjanczak.barrelsofbeer
 
 import spock.lang.Specification
 
-class TestSpec extends Specification {
+class MathSpec extends Specification {
 
     def "1 + 1 = 2"() {
         given:
