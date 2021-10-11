@@ -1,18 +1,30 @@
 package com.mateuszjanczak.barrelsofbeer
 
-import spock.lang.Specification
+import org.springframework.web.client.HttpClientErrorException
 
-class ITestMath extends Specification {
+import static com.mateuszjanczak.barrelsofbeer.configuration.WireMock.wireMockServer
 
-    def "1 + 1 = 2"() {
+class ITestMath extends IntegrationTestBase {
+
+    def "Should return 200"() {
         given:
-        def a = 1
-        def b = 1
+        testMock.success()
 
         when:
-        def result = a + b
+        def response = restTemplate.getForEntity("${wireMockServer.baseUrl()}/hello", String.class)
 
         then:
-        result == 2
+        response.statusCode.value() == 200
+    }
+
+    def "Should throw exception"() {
+        given:
+        testMock.fail()
+
+        when:
+        restTemplate.getForEntity("${wireMockServer.baseUrl()}/hello", String.class)
+
+        then:
+        thrown(HttpClientErrorException)
     }
 }
