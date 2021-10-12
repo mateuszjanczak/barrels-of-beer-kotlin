@@ -129,15 +129,9 @@
                     <testSources>
                         <testSource>
                             <directory>src/test/groovy</directory>
-                            <includes>
-                                <include>**/*Spec.groovy</include>
-                            </includes>
                         </testSource>
                         <testSource>
                             <directory>src/integration-test/groovy</directory>
-                            <includes>
-                                <include>**/ITest*.groovy</include>
-                            </includes>
                         </testSource>
                     </testSources>
                 </configuration>
