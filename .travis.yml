@@ -1,0 +1,9 @@
+language: java
+
+jdk: openjdk8
+
+jobs:
+  include:
+    - stage: run unit and integration tests
+      script:
+        - mvn verify -B

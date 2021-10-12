@@ -4,7 +4,7 @@ import org.springframework.web.client.HttpClientErrorException
 
 import static com.mateuszjanczak.barrelsofbeer.configuration.WireMock.wireMockServer
 
-class ITestMath extends IntegrationTestBase {
+class ITestHello extends IntegrationTestBase {
 
     def "Should return 200"() {
         given:
