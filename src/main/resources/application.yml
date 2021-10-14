@@ -1,7 +1,7 @@
 # Sensor
 sensor:
-  baseUrl: http://192.168.136.110/iolinkmaster/port[0]/iolinkdevice/pdin/getdata
-  timeout: 1 # in seconds
+  baseUrl: http://192.168.136.110/iolinkmaster/port[SENSOR_ID]/iolinkdevice/pdin/getdata
+  timeout: 5 # in seconds
 
 # MongoDB
 spring:

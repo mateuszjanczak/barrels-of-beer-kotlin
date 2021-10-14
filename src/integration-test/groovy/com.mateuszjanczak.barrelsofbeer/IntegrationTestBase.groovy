@@ -17,7 +17,7 @@ abstract class IntegrationTestBase extends Specification {
     def setupSpec() {
         sensorMock = new SensorMock(wireMockServer)
         wireMockServer.start()
-        sensorConfiguration = new SensorConfiguration(wireMockServer.baseUrl(), 1)
+        sensorConfiguration = new SensorConfiguration(buildUrl(wireMockServer.baseUrl()), 1)
     }
 
     def cleanup() {
@@ -26,5 +26,13 @@ abstract class IntegrationTestBase extends Specification {
 
     def cleanupSpec() {
         wireMockServer.stop()
+    }
+
+    static templateUrl() {
+        "/iolinkmaster/port[SENSOR_ID]/iolinkdevice/pdin/getdata"
+    }
+
+    private static buildUrl(baseUrl) {
+        baseUrl + templateUrl()
     }
 }

@@ -6,7 +6,7 @@ import com.mateuszjanczak.barrelsofbeer.common.SensorHttpClientException
 import com.mateuszjanczak.barrelsofbeer.configuration.SensorConfiguration
 
 interface SensorClient {
-    fun getSensorResponse(): SensorResponse
+    fun getSensorResponse(id: Int): SensorResponse
 }
 
 class DefaultSensorClient(
@@ -14,9 +14,9 @@ class DefaultSensorClient(
     private val objectMapper: ObjectMapper
 ) : SensorClient {
 
-    override fun getSensorResponse(): SensorResponse {
+    override fun getSensorResponse(id: Int): SensorResponse {
         val result = try {
-            khttp.get(url = sensorConfiguration.baseUrl + "/hello", timeout = sensorConfiguration.timeout)
+            khttp.get(url = sensorConfiguration.baseUrl.fillSensorId(id), timeout = sensorConfiguration.timeout)
         } catch (e: Exception) {
             throw SensorHttpClientException("HttpClientException", e)
         }
@@ -29,4 +29,6 @@ class DefaultSensorClient(
 
         return sensorResponse
     }
+
+    private fun String.fillSensorId(id: Int): String = this.replace("SENSOR_ID", "$id")
 }

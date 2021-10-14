@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import static com.github.tomakehurst.wiremock.client.WireMock.get
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
+import static com.mateuszjanczak.barrelsofbeer.IntegrationTestBase.templateUrl
 
 class SensorMock {
 
@@ -16,7 +17,7 @@ class SensorMock {
 
     def getSensorDataSuccessWith(args = [:]) {
         wireMockServer.stubFor(
-            get(urlEqualTo('/hello'))
+            get(urlEqualTo(testUrl(args)))
                 .willReturn(
                     aResponse()
                         .withStatus(200)
@@ -29,7 +30,7 @@ class SensorMock {
 
     def getSensorDataFailWithInvalidResponse(args = [:]) {
         wireMockServer.stubFor(
-            get(urlEqualTo('/hello'))
+            get(urlEqualTo(testUrl(args)))
                 .willReturn(
                     aResponse()
                         .withStatus(200)
@@ -40,12 +41,19 @@ class SensorMock {
 
     def getSensorDataFailWith(args = [:]) {
         wireMockServer.stubFor(
-            get(urlEqualTo('/hello'))
+            get(urlEqualTo(testUrl(args)))
                 .willReturn(
                     aResponse()
                         .withStatus(args.statusCode ?: 404)
                 )
         )
+    }
+
+    private static testUrl(args = [:]) {
+        templateUrl()
+            .replace("SENSOR_ID", args.id as String ?: "1")
+            .replace("[", "%5B")
+            .replace("]", "%5D")
     }
 
     private static correctResponseBody(args = [:]) {

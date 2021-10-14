@@ -7,8 +7,8 @@ class SensorAdapter(
     private val sensorClient: SensorClient
 ) : Sensor {
 
-    override fun getSensorData(): SensorData {
-        val sensorResponse = sensorClient.getSensorResponse()
+    override fun getSensorData(id: Int): SensorData {
+        val sensorResponse = sensorClient.getSensorResponse(id)
         return SensorData(sensorResponse.data.value)
     }
 }

@@ -22,7 +22,7 @@ class ITestSensor extends IntegrationTestBase {
         sensorMock.getSensorDataSuccessWith(timeout: 5000)
 
         when:
-        sensor.getSensorData()
+        sensor.getSensorData(1)
 
         then:
         thrown(SensorHttpClientException)
@@ -34,7 +34,7 @@ class ITestSensor extends IntegrationTestBase {
         sensorMock.getSensorDataFailWith(statusCode: statusCode)
 
         when:
-        sensor.getSensorData()
+        sensor.getSensorData(1)
 
         then:
         thrown(SensorHttpClientException)
@@ -48,7 +48,7 @@ class ITestSensor extends IntegrationTestBase {
         sensorMock.getSensorDataFailWithInvalidResponse()
 
         when:
-        sensor.getSensorData()
+        sensor.getSensorData(1)
 
         then:
         thrown(SensorHttpClientException)
@@ -56,10 +56,10 @@ class ITestSensor extends IntegrationTestBase {
 
     def "Should return sensor data"() {
         given:
-        sensorMock.getSensorDataSuccessWith()
+        sensorMock.getSensorDataSuccessWith(id: 1)
 
         when:
-        def result = sensor.getSensorData()
+        def result = sensor.getSensorData(1)
 
         then:
         result == sensorData(value: "43BAC7AE00000204")

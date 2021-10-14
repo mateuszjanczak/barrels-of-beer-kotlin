@@ -21,20 +21,20 @@ class SensorSpec extends Specification {
 
     def "Should throw an exception when getting sensor data returns error"() {
         when:
-        sensor.getSensorData()
+        sensor.getSensorData(1)
 
         then:
         thrown(SensorHttpClientException)
 
         and:
-        1 * client.getSensorResponse() >> {
+        1 * client.getSensorResponse(1) >> {
             throw new SensorHttpClientException("SensorHttpClientException")
         }
     }
 
     def "Should return sensor data"() {
         when:
-        def result = sensor.getSensorData()
+        def result = sensor.getSensorData(1)
 
         then:
         result == sensorData(
@@ -42,7 +42,7 @@ class SensorSpec extends Specification {
         )
 
         and:
-        1 * client.getSensorResponse() >> {
+        1 * client.getSensorResponse(1) >> {
             sensorResponse(data: srData(value: 's0m3th1ng'))
         }
 
