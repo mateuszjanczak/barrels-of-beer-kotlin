@@ -2,7 +2,9 @@ package com.mateuszjanczak.barrelsofbeer.infrastructure
 
 import com.mateuszjanczak.barrelsofbeer.domain.Sensor
 import com.mateuszjanczak.barrelsofbeer.domain.SensorData
+import org.springframework.stereotype.Component
 
+@Component
 class SensorAdapter(
     private val sensorClient: SensorClient
 ) : Sensor {
