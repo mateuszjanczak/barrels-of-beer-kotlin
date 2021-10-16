@@ -1,0 +1,9 @@
+# Sensor
+sensor:
+  baseUrl: http://localhost/iolinkmaster/port[SENSOR_ID]/iolinkdevice/pdin/getdata
+  timeout: 1 # in seconds
+
+# Logging
+sentry:
+  logging:
+    enabled: false
