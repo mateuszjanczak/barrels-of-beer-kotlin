@@ -2,10 +2,12 @@ package com.mateuszjanczak.barrelsofbeer.utils
 
 import com.mateuszjanczak.barrelsofbeer.domain.SensorData
 import com.mateuszjanczak.barrelsofbeer.domain.SensorProperties
+import org.springframework.stereotype.Component
 
 typealias Hex = String
 typealias Bin = String
 
+@Component
 class SensorExtractor {
 
     fun getSensorPropertiesFromSensorData(sensorData: SensorData): SensorProperties {

@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.mateuszjanczak.barrelsofbeer.common.SensorHttpClientException
 import com.mateuszjanczak.barrelsofbeer.configuration.SensorConfiguration
+import org.springframework.stereotype.Component
 
 interface SensorClient {
     fun getSensorResponse(id: Int): SensorResponse
 }
 
+@Component
 class DefaultSensorClient(
     private val sensorConfiguration: SensorConfiguration,
     private val objectMapper: ObjectMapper

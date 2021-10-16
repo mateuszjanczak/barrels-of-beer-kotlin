@@ -22,7 +22,7 @@ class SensorMock {
                     aResponse()
                         .withStatus(200)
                         .withHeader('Content-Type', 'application/json')
-                        .withBody(correctResponseBody())
+                        .withBody(correctResponseBody(args))
                         .withFixedDelay(args.timeout ?: 0)
                 )
         )
@@ -60,7 +60,7 @@ class SensorMock {
         /{
            "cid":-1,
            "data":{
-              "value":"43BAC7AE00000204"
+              "value":"${args.hex as String ?: "43BAC7AE00000204"}"
            },
            "code":200
         }/
