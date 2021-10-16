@@ -1,8 +1,8 @@
 package com.mateuszjanczak.barrelsofbeer.domain.data.repository
 
-import com.mateuszjanczak.barrelsofbeer.domain.data.document.TapActionLog
+import com.mateuszjanczak.barrelsofbeer.domain.data.document.ActionEvent
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface TapActionLogRepository : MongoRepository<TapActionLog, String>
+interface ActionEventRepository : MongoRepository<ActionEvent, String>
