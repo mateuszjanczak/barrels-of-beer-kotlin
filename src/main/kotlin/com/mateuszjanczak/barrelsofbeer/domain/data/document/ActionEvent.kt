@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.util.Date
 
 @Document
-data class ActionEvent (
+data class ActionEvent(
     @Id
     val id: String,
     val tapId: Int,
