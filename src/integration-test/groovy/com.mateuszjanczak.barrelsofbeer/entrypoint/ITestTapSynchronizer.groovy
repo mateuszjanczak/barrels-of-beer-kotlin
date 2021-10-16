@@ -1,10 +1,9 @@
 package com.mateuszjanczak.barrelsofbeer.entrypoint
 
 import com.mateuszjanczak.barrelsofbeer.BarrelsOfBeerApplication
-import com.mateuszjanczak.barrelsofbeer.IntegrationTestBase
+import com.mateuszjanczak.barrelsofbeer.SpringTestBase
 import com.mateuszjanczak.barrelsofbeer.domain.DefaultSensorService
 import com.mateuszjanczak.barrelsofbeer.domain.TapService
-import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TapRepository
 import com.mateuszjanczak.barrelsofbeer.infrastructure.DefaultSensorClient
 import com.mateuszjanczak.barrelsofbeer.infrastructure.SensorAdapter
 import com.mateuszjanczak.barrelsofbeer.utils.SensorExtractor
@@ -15,10 +14,7 @@ import static com.mateuszjanczak.barrelsofbeer.common.SerializationKt.objectMapp
 import static com.mateuszjanczak.barrelsofbeer.fixtures.TapFixture.tap
 
 @SpringBootTest(classes = BarrelsOfBeerApplication)
-class ITestTapSynchronizer extends IntegrationTestBase {
-
-    @Autowired
-    TapRepository tapRepository
+class ITestTapSynchronizer extends SpringTestBase {
 
     @Autowired
     TapService tapService
@@ -68,6 +64,37 @@ class ITestTapSynchronizer extends IntegrationTestBase {
         ]
     }
 
+    def "Should synchronize taps even if one fails and seconds disabled"() {
+        given:
+        def tapList = [
+            tap(tapId: 1),
+            tap(tapId: 2),
+            tap(tapId: 3),
+            tap(tapId: 4, enabled: false)
+        ]
+        tapRepository.saveAll(tapList)
+
+        and:
+        sensorMock.getSensorDataSuccessWith(id: 1, hex: "3F73333300000278")
+        sensorMock.getSensorDataFailWith(id: 2)
+        sensorMock.getSensorDataSuccessWith(id: 3, hex: "41A95C290000022C")
+
+        when:
+        tapSynchronizer.synchronizeTaps()
+        sleep(1000)
+
+        then:
+        noExceptionThrown()
+
+        and:
+        tapService.getTapList() == [
+            tap(tapId: 1, currentLevel: 29050L, temperature: 15.8f),
+            tap(tapId: 2, currentLevel: 20000L, temperature: 5.0f),
+            tap(tapId: 3, currentLevel: 8830L, temperature: 13.9f),
+            tap(tapId: 4, currentLevel: 20000L, temperature: 5.0f, enabled: false)
+        ]
+    }
+
     def "Should synchronize taps with sensors"() {
         given:
         def tapList = [
@@ -91,9 +118,9 @@ class ITestTapSynchronizer extends IntegrationTestBase {
 
         and:
         tapService.getTapList() == [
-            tap(tapId: 1, currentLevel: 950L, temperature: 15.8f),
-            tap(tapId: 2, currentLevel: 1560L, temperature: 14.0f),
-            tap(tapId: 3, currentLevel: 21170L, temperature: 13.9f),
+            tap(tapId: 1, currentLevel: 29050L, temperature: 15.8f),
+            tap(tapId: 2, currentLevel: 28440L, temperature: 14.0f),
+            tap(tapId: 3, currentLevel: 8830L, temperature: 13.9f),
         ]
     }
 }

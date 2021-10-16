@@ -15,9 +15,8 @@ class TapSynchronizer(
     fun synchronizeTaps() {
         val tapList = tapService.getTapList()
 
-        tapList.forEach {
-            synchronizeTap(it.tapId)
-        }
+        tapList.filter { it.enabled }
+            .forEach { synchronizeTap(it.tapId) }
     }
 
     private fun synchronizeTap(tapId: Int) =

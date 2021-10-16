@@ -27,11 +27,13 @@ class DefaultTapService(
                     tapId = it.tapId,
                     barrelContent = it.barrelContent,
                     temperature = sensorProperties.temperature,
-                    currentLevel = sensorProperties.currentLevel,
+                    currentLevel = calculateCurrentLevel(it.capacity, sensorProperties.currentLevel),
                     capacity = it.capacity,
                     enabled = it.enabled
                 )
             )
         }
     }
+
+    private fun calculateCurrentLevel(capacity: Long, currentLevel: Long): Long = capacity - currentLevel
 }

@@ -65,6 +65,40 @@ class TapSynchronizerSpec extends Specification {
         0 * tapService.saveSensorProperties(1, _)
     }
 
+    def "Should synchronize taps even if one fails and seconds disabled"() {
+        given:
+        def tapList = [
+            tap(tapId: 1),
+            tap(tapId: 2),
+            tap(tapId: 3),
+            tap(tapId: 4, enabled: false)
+        ]
+
+        when:
+        tapSynchronizer.synchronizeTaps()
+        sleep(1000)
+
+        then:
+        noExceptionThrown()
+
+        and:
+        1 * tapService.getTapList() >> tapList
+
+        and:
+        1 * sensorService.getSensorProperties(1) >> sensorProperties()
+        1 * sensorService.getSensorProperties(2) >> sensorProperties()
+        1 * sensorService.getSensorProperties(3) >> {
+            throw new SensorHttpClientException("SensorHttpClientException")
+        }
+        0 * sensorService.getSensorProperties(4)
+
+        and:
+        1 * tapService.saveSensorProperties(1, sensorProperties())
+        1 * tapService.saveSensorProperties(2, sensorProperties())
+        0 * tapService.saveSensorProperties(3, sensorProperties())
+        0 * tapService.saveSensorProperties(4, sensorProperties())
+    }
+
     def "Should synchronize taps with sensors"() {
         given:
         def tapList = [
@@ -77,6 +111,9 @@ class TapSynchronizerSpec extends Specification {
         sleep(1000)
 
         then:
+        noExceptionThrown()
+
+        and:
         1 * tapService.getTapList() >> tapList
 
         and:
