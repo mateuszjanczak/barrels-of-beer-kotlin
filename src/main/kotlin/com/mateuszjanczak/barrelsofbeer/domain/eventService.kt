@@ -10,10 +10,15 @@ import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.TemperatureEvent
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.ActionEventRepository
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TemperatureEventRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+
 
 interface EventService {
     fun saveEvent(tap: Tap, logType: LogType)
+    fun getActionEvents(page: Int): Page<ActionEvent>
+    fun getTemperatureEvents(page: Int): Page<TemperatureEvent>
 }
 
 @Service
@@ -30,6 +35,10 @@ class DefaultEventService(
             TAP_READ_TEMPERATURE -> saveTapReadTemperature(tap)
         }
     }
+
+    override fun getActionEvents(page: Int): Page<ActionEvent> = actionEventRepository.findAll(PageRequest.of(page, 20))
+
+    override fun getTemperatureEvents(page: Int): Page<TemperatureEvent> =temperatureEventRepository.findAll(PageRequest.of(page, 20))
 
     private fun saveTapNew(tap: Tap) {
         actionEventRepository.save(
