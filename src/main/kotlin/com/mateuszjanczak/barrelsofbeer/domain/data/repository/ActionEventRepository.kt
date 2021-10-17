@@ -5,4 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ActionEventRepository : MongoRepository<ActionEvent, String>
+interface ActionEventRepository : MongoRepository<ActionEvent, String> {
+    fun findActionEventByTapIdOrderByIdDesc(tapId: Int): ActionEvent
+}
