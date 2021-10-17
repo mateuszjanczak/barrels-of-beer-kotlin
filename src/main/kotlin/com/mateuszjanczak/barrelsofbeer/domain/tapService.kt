@@ -1,5 +1,9 @@
 package com.mateuszjanczak.barrelsofbeer.domain
 
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_NEW
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ_TEMPERATURE
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_SET
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
 import com.mateuszjanczak.barrelsofbeer.domain.data.dto.TapDetails
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TapRepository
@@ -16,20 +20,21 @@ interface TapService {
 
 @Service
 class DefaultTapService(
-    private val tapRepository: TapRepository
+    private val tapRepository: TapRepository,
+    private val eventService: EventService
 ) : TapService {
 
     override fun createTap(tapId: Int) {
         tapRepository.save(
             Tap(tapId)
-        )
+        ).let { eventService.saveEvent(it, TAP_NEW) }
     }
 
     override fun setTap(tapId: Int, tapDetails: TapDetails) {
-        tapRepository.findByIdOrNull(tapId)?.let {
-            val capacityIsHigherThanBefore = it.capacity < tapDetails.capacity
+        tapRepository.findByIdOrNull(tapId)?.let { previous ->
+            val capacityIsHigherThanBefore = previous.capacity < tapDetails.capacity
             if (capacityIsHigherThanBefore) {
-                val currentLevel = tapDetails.capacity - it.capacity + it.currentLevel
+                val currentLevel = tapDetails.capacity - previous.capacity + previous.currentLevel
                 tapRepository.save(
                     Tap(
                         tapId = tapId,
@@ -37,7 +42,7 @@ class DefaultTapService(
                         currentLevel = currentLevel,
                         capacity = tapDetails.capacity
                     )
-                )
+                ).let { next -> eventService.saveEvent(next, TAP_SET) }
             }
         }
     }
@@ -47,18 +52,23 @@ class DefaultTapService(
     override fun getTapList(): List<Tap> = tapRepository.findAll()
 
     override fun saveSensorProperties(tapId: Int, sensorProperties: SensorProperties) {
-        tapRepository.findByIdOrNull(tapId)?.let {
-            val currentLevel = it.capacity - sensorProperties.currentLevel
+        tapRepository.findByIdOrNull(tapId)?.let { previous ->
+            val currentLevel = previous.capacity - sensorProperties.currentLevel
             tapRepository.save(
                 Tap(
-                    tapId = it.tapId,
-                    barrelContent = it.barrelContent,
+                    tapId = previous.tapId,
+                    barrelContent = previous.barrelContent,
                     temperature = sensorProperties.temperature,
                     currentLevel = currentLevel,
-                    capacity = it.capacity,
-                    enabled = it.enabled
+                    capacity = previous.capacity,
+                    enabled = previous.enabled
                 )
-            )
+            ).let { next ->
+                if (previous.currentLevel != next.capacity && previous.currentLevel > 0)
+                    eventService.saveEvent(next, TAP_READ)
+                if (previous.temperature != next.temperature)
+                    eventService.saveEvent(next, TAP_READ_TEMPERATURE)
+            }
         }
     }
 }
