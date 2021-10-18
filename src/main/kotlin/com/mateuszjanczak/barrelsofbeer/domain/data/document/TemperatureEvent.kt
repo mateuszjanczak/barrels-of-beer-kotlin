@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 @Document
 data class TemperatureEvent(
     @Id
-    val id: ObjectId = ObjectId.get(),
+    val id: String = ObjectId.get().toString(),
     val tapId: Int,
     val barrelContent: String,
     val temperature: Float,
