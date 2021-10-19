@@ -38,7 +38,7 @@ class DefaultTapService(
                 tapRepository.save(
                     Tap(
                         tapId = tapId,
-                        barrelContent = tapDetails.contentType,
+                        barrelContent = tapDetails.contentTypeAsString,
                         currentLevel = currentLevel,
                         capacity = tapDetails.capacity
                     )
