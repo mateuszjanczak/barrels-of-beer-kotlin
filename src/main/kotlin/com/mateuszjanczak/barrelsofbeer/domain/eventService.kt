@@ -1,6 +1,8 @@
 package com.mateuszjanczak.barrelsofbeer.domain
 
 import com.mateuszjanczak.barrelsofbeer.common.LogType
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_DISABLE
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_ENABLE
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_NEW
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ_TEMPERATURE
@@ -33,12 +35,13 @@ class DefaultEventService(
             TAP_SET -> saveTapSet(tap)
             TAP_READ -> saveTapReadCurrentLevel(tap)
             TAP_READ_TEMPERATURE -> saveTapReadTemperature(tap)
+            TAP_ENABLE, TAP_DISABLE -> saveToggleTap(tap, logType)
         }
     }
 
     override fun getActionEvents(page: Int): Page<ActionEvent> = actionEventRepository.findAll(PageRequest.of(page, 20))
 
-    override fun getTemperatureEvents(page: Int): Page<TemperatureEvent> =temperatureEventRepository.findAll(PageRequest.of(page, 20))
+    override fun getTemperatureEvents(page: Int): Page<TemperatureEvent> = temperatureEventRepository.findAll(PageRequest.of(page, 20))
 
     private fun saveTapNew(tap: Tap) {
         actionEventRepository.save(
@@ -85,6 +88,19 @@ class DefaultEventService(
                 tapId = tap.tapId,
                 barrelContent = tap.barrelContent,
                 temperature = tap.temperature
+            )
+        )
+    }
+
+    private fun saveToggleTap(tap: Tap, logType: LogType) {
+        actionEventRepository.save(
+            ActionEvent(
+                tapId = tap.tapId,
+                barrelContent = tap.barrelContent,
+                currentLevel = tap.currentLevel,
+                totalUsage = tap.capacity,
+                singleUsage = 0L,
+                logType = logType
             )
         )
     }
