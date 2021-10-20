@@ -1,7 +1,7 @@
 package com.mateuszjanczak.barrelsofbeer.common
 
 enum class LogType {
-    TAP_NEW, TAP_SET, TAP_READ, TAP_READ_TEMPERATURE, TAP_ENABLE, TAP_DISABLE
+    TAP_NEW, TAP_SET, TAP_REMOVE, TAP_READ, TAP_READ_TEMPERATURE, TAP_ENABLE, TAP_DISABLE
 }
 
 enum class ContentType {

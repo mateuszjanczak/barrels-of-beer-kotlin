@@ -6,6 +6,7 @@ import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_ENABLE
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_NEW
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ_TEMPERATURE
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_REMOVE
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_SET
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.ActionEvent
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
@@ -35,6 +36,7 @@ class DefaultEventService(
         when (logType) {
             TAP_NEW -> saveTapNew(tap)
             TAP_SET -> saveTapSet(tap)
+            TAP_REMOVE -> saveTapRemove(tap)
             TAP_READ -> saveTapReadCurrentLevel(tap)
             TAP_READ_TEMPERATURE -> saveTapReadTemperature(tap)
             TAP_ENABLE, TAP_DISABLE -> saveToggleTap(tap, logType)
@@ -58,6 +60,19 @@ class DefaultEventService(
                 totalUsage = tap.capacity - tap.currentLevel,
                 singleUsage = 0L,
                 logType = TAP_NEW
+            )
+        )
+    }
+
+    private fun saveTapRemove(tap: Tap) {
+        actionEventRepository.save(
+            ActionEvent(
+                tapId = tap.tapId,
+                barrelContent = tap.barrelContent,
+                currentLevel = tap.currentLevel,
+                totalUsage = tap.capacity - tap.currentLevel,
+                singleUsage = 0L,
+                logType = TAP_REMOVE
             )
         )
     }
