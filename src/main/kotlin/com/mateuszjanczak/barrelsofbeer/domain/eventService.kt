@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service
 
 interface EventService {
     fun saveEvent(tap: Tap, logType: LogType)
+    fun getActionEvents(): List<ActionEvent>
     fun getActionEvents(page: Int): Page<ActionEvent>
+    fun getTemperatureEvents(): List<TemperatureEvent>
     fun getTemperatureEvents(page: Int): Page<TemperatureEvent>
 }
 
@@ -39,7 +41,11 @@ class DefaultEventService(
         }
     }
 
+    override fun getActionEvents(): List<ActionEvent> = actionEventRepository.findAll()
+
     override fun getActionEvents(page: Int): Page<ActionEvent> = actionEventRepository.findAll(PageRequest.of(page, 20))
+
+    override fun getTemperatureEvents(): List<TemperatureEvent> = temperatureEventRepository.findAll()
 
     override fun getTemperatureEvents(page: Int): Page<TemperatureEvent> = temperatureEventRepository.findAll(PageRequest.of(page, 20))
 
