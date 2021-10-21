@@ -1,8 +1,8 @@
 package com.mateuszjanczak.barrelsofbeer.entrypoint
 
 import com.mateuszjanczak.barrelsofbeer.common.SensorHttpClientException
-import com.mateuszjanczak.barrelsofbeer.domain.SensorService
-import com.mateuszjanczak.barrelsofbeer.domain.TapService
+import com.mateuszjanczak.barrelsofbeer.domain.service.SensorService
+import com.mateuszjanczak.barrelsofbeer.domain.service.TapService
 import spock.lang.Specification
 
 import static com.mateuszjanczak.barrelsofbeer.fixtures.SensorPropertiesFixture.sensorProperties

@@ -1,6 +1,9 @@
-package com.mateuszjanczak.barrelsofbeer.domain
+package com.mateuszjanczak.barrelsofbeer.domain.service
 
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TapRepository
+import com.mateuszjanczak.barrelsofbeer.domain.service.DefaultTapService
+import com.mateuszjanczak.barrelsofbeer.domain.service.EventService
+import com.mateuszjanczak.barrelsofbeer.domain.service.TapService
 import spock.lang.Specification
 
 import static com.mateuszjanczak.barrelsofbeer.common.ContentType.GAZDA_Marcowe

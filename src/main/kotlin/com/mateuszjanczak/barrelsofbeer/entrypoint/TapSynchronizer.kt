@@ -1,7 +1,7 @@
 package com.mateuszjanczak.barrelsofbeer.entrypoint
 
-import com.mateuszjanczak.barrelsofbeer.domain.SensorService
-import com.mateuszjanczak.barrelsofbeer.domain.TapService
+import com.mateuszjanczak.barrelsofbeer.domain.service.SensorService
+import com.mateuszjanczak.barrelsofbeer.domain.service.TapService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 

@@ -1,9 +1,9 @@
 package com.mateuszjanczak.barrelsofbeer.entrypoint
 
-import com.mateuszjanczak.barrelsofbeer.domain.TapService
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
 import com.mateuszjanczak.barrelsofbeer.domain.data.dto.NewTap
 import com.mateuszjanczak.barrelsofbeer.domain.data.dto.TapDetails
+import com.mateuszjanczak.barrelsofbeer.domain.service.TapService
 import com.mateuszjanczak.barrelsofbeer.entrypoint.TapEndpoints.TAPS
 import com.mateuszjanczak.barrelsofbeer.entrypoint.TapEndpoints.TAP_ID
 import org.springframework.http.ResponseEntity
