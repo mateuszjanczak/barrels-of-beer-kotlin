@@ -1,5 +1,6 @@
 package com.mateuszjanczak.barrelsofbeer.domain.data.document
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.mateuszjanczak.barrelsofbeer.common.LogType
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
@@ -15,6 +16,6 @@ data class ActionEvent(
     val currentLevel: Long,
     val totalUsage: Long,
     val singleUsage: Long,
-    val date: LocalDateTime = LocalDateTime.now(),
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") val date: LocalDateTime = LocalDateTime.now(),
     val logType: LogType
 )

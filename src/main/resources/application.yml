@@ -5,6 +5,8 @@ sensor:
 
 # Spring, MongoDB
 spring:
+  banner:
+    location: banner.txt
   data:
     mongodb:
       uri: mongodb://localhost:27017

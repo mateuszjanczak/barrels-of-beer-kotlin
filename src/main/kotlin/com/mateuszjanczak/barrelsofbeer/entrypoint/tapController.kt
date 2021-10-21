@@ -34,7 +34,8 @@ class TapController(
     fun createTap(@Valid @RequestBody newTap: NewTap): ResponseEntity<Unit> = ok(tapService.createTap(newTap.tapId))
 
     @PostMapping(TAP_ID)
-    fun setTap(@PathVariable tapId: Int, @Valid @RequestBody tapDetails: TapDetails): ResponseEntity<Unit> = ok(tapService.setTap(tapId, tapDetails))
+    fun setTap(@PathVariable tapId: Int, @Valid @RequestBody tapDetails: TapDetails): ResponseEntity<Unit> =
+        ok(tapService.setTap(tapId, tapDetails))
 }
 
 object TapEndpoints {

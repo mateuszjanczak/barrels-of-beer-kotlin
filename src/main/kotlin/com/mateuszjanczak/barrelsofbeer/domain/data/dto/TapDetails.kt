@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull
 data class TapDetails(
     @NotBlank @NotNull val contentType: ContentType,
     @Range(min = 1L) @NotNull val capacity: Long
-){
+) {
     val contentTypeAsString: String
         get() = contentType.name.replace("_", " ")
 }
