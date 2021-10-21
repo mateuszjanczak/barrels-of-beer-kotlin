@@ -1,6 +1,6 @@
 package com.mateuszjanczak.barrelsofbeer.entrypoint
 
-import com.mateuszjanczak.barrelsofbeer.domain.data.dto.ContentRanking
+import com.mateuszjanczak.barrelsofbeer.domain.data.dto.Ranking
 import com.mateuszjanczak.barrelsofbeer.domain.service.StatisticsService
 import com.mateuszjanczak.barrelsofbeer.entrypoint.StatisticsEndpoints.RANKING
 import org.springframework.http.ResponseEntity
@@ -18,7 +18,7 @@ class StatisticsController(
 ) {
 
     @GetMapping(RANKING)
-    fun getRanking(): ResponseEntity<List<ContentRanking>> =
+    fun getRanking(): ResponseEntity<List<Ranking>> =
         ok(statisticsService.getRanking())
 }
 

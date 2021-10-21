@@ -1,6 +1,6 @@
 package com.mateuszjanczak.barrelsofbeer.domain.data.dto
 
-data class ContentRanking(
+data class Ranking(
     val barrelContent: String,
     val count: Long
 )
