@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -31,22 +32,22 @@ class EventController(
 
     @GetMapping(EVENTS_ACTION)
     fun getActionEvents(@PathVariable page: Int): ResponseEntity<Page<ActionEvent>> =
-        ResponseEntity.ok(eventService.getActionEvents(page))
+        ok(eventService.getActionEvents(page))
 
     @GetMapping(EVENTS_TEMPERATURE)
     fun getTemperatureEvents(@PathVariable page: Int): ResponseEntity<Page<TemperatureEvent>> =
-        ResponseEntity.ok(eventService.getTemperatureEvents(page))
+        ok(eventService.getTemperatureEvents(page))
 
     @GetMapping(EVENTS_ACTION_CSV)
     fun downloadActionEventsAsCsv(): ResponseEntity<Resource> =
-        ResponseEntity.ok()
+        ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=actionEvents-${date()}.csv")
             .contentType(MediaType.parseMediaType("text/csv"))
             .body(documentService.getActionEventsCsv())
 
     @GetMapping(EVENTS_TEMPERATURE_CSV)
     fun downloadTemperatureEventsAsCsv(): ResponseEntity<Resource> =
-        ResponseEntity.ok()
+        ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=temperatureEvents-${date()}.csv")
             .contentType(MediaType.parseMediaType("text/csv"))
             .body(documentService.getTemperatureEventsCsv())

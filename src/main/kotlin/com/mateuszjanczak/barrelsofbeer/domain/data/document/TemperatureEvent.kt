@@ -1,5 +1,6 @@
 package com.mateuszjanczak.barrelsofbeer.domain.data.document
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
@@ -12,5 +13,5 @@ data class TemperatureEvent(
     val tapId: Int,
     val barrelContent: String,
     val temperature: Float,
-    val date: LocalDateTime = LocalDateTime.now()
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") val date: LocalDateTime = LocalDateTime.now(),
 )
