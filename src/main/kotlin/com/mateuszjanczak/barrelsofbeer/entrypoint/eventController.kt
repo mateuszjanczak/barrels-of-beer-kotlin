@@ -1,9 +1,9 @@
 package com.mateuszjanczak.barrelsofbeer.entrypoint
 
-import com.mateuszjanczak.barrelsofbeer.domain.DocumentService
-import com.mateuszjanczak.barrelsofbeer.domain.EventService
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.ActionEvent
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.TemperatureEvent
+import com.mateuszjanczak.barrelsofbeer.domain.service.DocumentService
+import com.mateuszjanczak.barrelsofbeer.domain.service.EventService
 import com.mateuszjanczak.barrelsofbeer.entrypoint.EventEndpoints.EVENTS_ACTION
 import com.mateuszjanczak.barrelsofbeer.entrypoint.EventEndpoints.EVENTS_ACTION_CSV
 import com.mateuszjanczak.barrelsofbeer.entrypoint.EventEndpoints.EVENTS_TEMPERATURE

@@ -1,4 +1,4 @@
-package com.mateuszjanczak.barrelsofbeer.domain
+package com.mateuszjanczak.barrelsofbeer.domain.service
 
 import com.mateuszjanczak.barrelsofbeer.common.LogType
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_DISABLE

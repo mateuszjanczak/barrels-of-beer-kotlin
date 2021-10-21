@@ -1,9 +1,10 @@
-package com.mateuszjanczak.barrelsofbeer.domain
+package com.mateuszjanczak.barrelsofbeer.domain.service
 
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_NEW
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ_TEMPERATURE
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_SET
+import com.mateuszjanczak.barrelsofbeer.domain.SensorProperties
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
 import com.mateuszjanczak.barrelsofbeer.domain.data.dto.TapDetails
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TapRepository

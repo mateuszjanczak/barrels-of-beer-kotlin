@@ -1,4 +1,4 @@
-package com.mateuszjanczak.barrelsofbeer.domain
+package com.mateuszjanczak.barrelsofbeer.domain.service
 
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.ActionEvent
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.TemperatureEvent

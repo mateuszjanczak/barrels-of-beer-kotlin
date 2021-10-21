@@ -2,8 +2,8 @@ package com.mateuszjanczak.barrelsofbeer.entrypoint
 
 import com.mateuszjanczak.barrelsofbeer.BarrelsOfBeerApplication
 import com.mateuszjanczak.barrelsofbeer.SpringTestBase
-import com.mateuszjanczak.barrelsofbeer.domain.DefaultSensorService
-import com.mateuszjanczak.barrelsofbeer.domain.TapService
+import com.mateuszjanczak.barrelsofbeer.domain.service.DefaultSensorService
+import com.mateuszjanczak.barrelsofbeer.domain.service.TapService
 import com.mateuszjanczak.barrelsofbeer.infrastructure.DefaultSensorClient
 import com.mateuszjanczak.barrelsofbeer.infrastructure.SensorAdapter
 import com.mateuszjanczak.barrelsofbeer.utils.SensorExtractor

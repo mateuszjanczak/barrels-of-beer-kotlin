@@ -1,6 +1,8 @@
-package com.mateuszjanczak.barrelsofbeer.domain
+package com.mateuszjanczak.barrelsofbeer.domain.service
 
 import com.mateuszjanczak.barrelsofbeer.common.SensorHttpClientException
+import com.mateuszjanczak.barrelsofbeer.domain.Sensor
+import com.mateuszjanczak.barrelsofbeer.domain.SensorProperties
 import com.mateuszjanczak.barrelsofbeer.utils.SensorExtractor
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service

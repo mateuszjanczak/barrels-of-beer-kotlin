@@ -1,8 +1,8 @@
 package com.mateuszjanczak.barrelsofbeer.entrypoint
 
 import com.mateuszjanczak.barrelsofbeer.common.TableType
-import com.mateuszjanczak.barrelsofbeer.domain.AdminService
 import com.mateuszjanczak.barrelsofbeer.domain.data.dto.ErrorMessage
+import com.mateuszjanczak.barrelsofbeer.domain.service.AdminService
 import com.mateuszjanczak.barrelsofbeer.entrypoint.AdminEndpoints.ADMIN_DISABLE_TAP
 import com.mateuszjanczak.barrelsofbeer.entrypoint.AdminEndpoints.ADMIN_ENABLE_TAP
 import com.mateuszjanczak.barrelsofbeer.entrypoint.AdminEndpoints.ADMIN_REMOVE_TAP
