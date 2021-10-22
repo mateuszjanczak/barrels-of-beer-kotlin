@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter.ofPattern
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = ["/api"])
+@RequestMapping
 class EventController(
     private val eventService: EventService,
     private val documentService: DocumentService
@@ -56,8 +56,8 @@ class EventController(
 }
 
 object EventEndpoints {
-    const val EVENTS_ACTION = "/events/action/{page}"
-    const val EVENTS_TEMPERATURE = "/events/temperature/{page}"
-    const val EVENTS_ACTION_CSV = "/events/action/download"
-    const val EVENTS_TEMPERATURE_CSV = "/events/temperature/download"
+    const val EVENTS_ACTION = "/api/events/action/{page}"
+    const val EVENTS_TEMPERATURE = "/api/events/temperature/{page}"
+    const val EVENTS_ACTION_CSV = "/api/events/action/download"
+    const val EVENTS_TEMPERATURE_CSV = "/api/events/temperature/download"
 }

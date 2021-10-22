@@ -19,7 +19,7 @@ import javax.validation.Valid
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = ["/api"])
+@RequestMapping
 class TapController(
     private val tapService: TapService
 ) {
@@ -39,6 +39,6 @@ class TapController(
 }
 
 object TapEndpoints {
-    const val TAPS = "/taps"
-    const val TAP_ID = "/taps/{tapId}"
+    const val TAPS = "/api/taps"
+    const val TAP_ID = "/api/taps/{tapId}"
 }

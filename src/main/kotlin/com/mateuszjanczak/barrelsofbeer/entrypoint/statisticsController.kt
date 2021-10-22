@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = ["/api"])
+@RequestMapping
 class StatisticsController(
     private val statisticsService: StatisticsService
 ) {
@@ -38,6 +38,6 @@ class StatisticsController(
 }
 
 object StatisticsEndpoints {
-    const val RANKING = "/ranking"
-    const val STATISTICS = "/statistics/from/{from}/to/{to}/interval/{interval}"
+    const val RANKING = "/api/ranking"
+    const val STATISTICS = "/api/statistics/from/{from}/to/{to}/interval/{interval}"
 }

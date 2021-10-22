@@ -21,7 +21,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = ["/api"])
+@RequestMapping
 class AdminController(
     private val adminService: AdminService
 ) {
@@ -48,8 +48,8 @@ class AdminController(
 }
 
 object AdminEndpoints {
-    const val ADMIN_ENABLE_TAP = "/admin/tap/{tapId}/enable"
-    const val ADMIN_DISABLE_TAP = "/admin/tap/{tapId}/disable"
-    const val ADMIN_REMOVE_TAP = "/admin/tap/{tapId}/remove"
-    const val ADMIN_RESET_DATABASE = "/admin/database/{tableType}/reset"
+    const val ADMIN_ENABLE_TAP = "/api/admin/tap/{tapId}/enable"
+    const val ADMIN_DISABLE_TAP = "/api/admin/tap/{tapId}/disable"
+    const val ADMIN_REMOVE_TAP = "/api/admin/tap/{tapId}/remove"
+    const val ADMIN_RESET_DATABASE = "/api/admin/database/{tableType}/reset"
 }

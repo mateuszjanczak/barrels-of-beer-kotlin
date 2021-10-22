@@ -1,11 +1,13 @@
 package com.mateuszjanczak.barrelsofbeer.security.configuration
 
+import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.USERS
 import com.mateuszjanczak.barrelsofbeer.security.entrypoint.AuthEndpoints.LOGIN
 import com.mateuszjanczak.barrelsofbeer.security.entrypoint.AuthEndpoints.REFRESH_TOKEN
 import com.mateuszjanczak.barrelsofbeer.security.entrypoint.AuthEndpoints.REMOVE_REFRESH_TOKEN
 import com.mateuszjanczak.barrelsofbeer.security.token.TokenFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod.POST
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -27,6 +29,7 @@ class SecurityConfiguration(
             .antMatchers(LOGIN).permitAll()
             .antMatchers(REFRESH_TOKEN).permitAll()
             .antMatchers(REMOVE_REFRESH_TOKEN).permitAll()
+            .antMatchers(POST, USERS).permitAll()
             .anyRequest().authenticated()
     }
 

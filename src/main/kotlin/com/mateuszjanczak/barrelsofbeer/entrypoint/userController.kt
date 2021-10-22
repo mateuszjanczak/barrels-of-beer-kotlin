@@ -21,7 +21,7 @@ import javax.validation.Valid
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = ["/api"])
+@RequestMapping
 class UserController(
     private val userService: UserService
 ) {
@@ -44,8 +44,8 @@ class UserController(
 }
 
 object UserEndpoints {
-    const val USERS = "/users"
-    const val USER_ID = "/users/{userId}"
-    const val ENABLE_USER = "/users/{userId}/enable"
-    const val DISABLE_USER = "/users/{userId}/disable"
+    const val USERS = "/api/users"
+    const val USER_ID = "/api/users/{userId}"
+    const val ENABLE_USER = "/api/users/{userId}/enable"
+    const val DISABLE_USER = "/api/users/{userId}/disable"
 }
