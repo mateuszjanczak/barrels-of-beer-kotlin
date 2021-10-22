@@ -3,6 +3,11 @@ sensor:
   baseUrl: http://localhost/iolinkmaster/port[SENSOR_ID]/iolinkdevice/pdin/getdata
   timeout: 1 # in seconds
 
+# Token
+token:
+  secret: secret
+  expirationTime: 86400
+
 # Logging
 sentry:
   logging:

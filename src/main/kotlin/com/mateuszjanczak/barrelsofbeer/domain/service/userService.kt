@@ -2,7 +2,7 @@ package com.mateuszjanczak.barrelsofbeer.domain.service
 
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.User
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.UserRepository
-import com.mateuszjanczak.barrelsofbeer.security.data.Credentials
+import com.mateuszjanczak.barrelsofbeer.security.data.dto.Credentials
 import org.springframework.context.annotation.Lazy
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.userdetails.UserDetailsService

@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.GenericFilterBean
+import java.util.Objects
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
@@ -28,9 +29,15 @@ class TokenFilter(
         val request = servletRequest as HttpServletRequest
         val response = servletResponse as HttpServletResponse
 
+        val header = request.getHeader(AUTHORIZATION_HEADER)
+
+        if (Objects.isNull(header) || !header.startsWith(TOKEN_PREFIX)) {
+            filterChain.doFilter(request, response)
+            return
+        }
+
         try {
-            val header = request.getHeader(AUTHORIZATION_HEADER)
-            val token = header.getToken()
+            val token = header.replace(TOKEN_PREFIX, "")
             val authentication = getAuthentication(token)
             SecurityContextHolder.getContext().authentication = authentication
         } catch (e: JwtException) {
@@ -38,15 +45,10 @@ class TokenFilter(
             response.contentType = APPLICATION_JSON_VALUE;
             response.outputStream.write(ErrorMessage(e.message ?: "Invalid token", UNAUTHORIZED.name).toJson().toByteArray())
             return
-        } catch (e: Exception) {
-            response.status = UNAUTHORIZED.value()
-            return
         }
 
         filterChain.doFilter(request, response)
     }
-
-    private fun String.getToken() = this.replace(TOKEN_PREFIX, "")
 
     private fun getAuthentication(token: String): Authentication? {
         val username = tokenProvider.getUsernameFromToken(token)

@@ -6,7 +6,7 @@ import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.DISABLE_USER
 import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.ENABLE_USER
 import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.USERS
 import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.USER_ID
-import com.mateuszjanczak.barrelsofbeer.security.data.Credentials
+import com.mateuszjanczak.barrelsofbeer.security.data.dto.Credentials
 
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok

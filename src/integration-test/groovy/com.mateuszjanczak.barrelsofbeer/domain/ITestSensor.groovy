@@ -19,7 +19,7 @@ class ITestSensor extends IntegrationTestBase {
 
     def "Should throw an exception when getting sensor data times out"() {
         given:
-        sensorMock.getSensorDataSuccessWith(timeout: 5000)
+        sensorMock.getSensorDataSuccessWith(timeout: 1000)
 
         when:
         sensor.getSensorData(1)

@@ -1,6 +1,8 @@
 package com.mateuszjanczak.barrelsofbeer.security.configuration
 
 import com.mateuszjanczak.barrelsofbeer.security.entrypoint.AuthEndpoints.LOGIN
+import com.mateuszjanczak.barrelsofbeer.security.entrypoint.AuthEndpoints.REFRESH_TOKEN
+import com.mateuszjanczak.barrelsofbeer.security.entrypoint.AuthEndpoints.REMOVE_REFRESH_TOKEN
 import com.mateuszjanczak.barrelsofbeer.security.token.TokenFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,6 +25,8 @@ class SecurityConfiguration(
         http.addFilterAfter(tokenFilter, BasicAuthenticationFilter::class.java)
         http.authorizeRequests()
             .antMatchers(LOGIN).permitAll()
+            .antMatchers(REFRESH_TOKEN).permitAll()
+            .antMatchers(REMOVE_REFRESH_TOKEN).permitAll()
             .anyRequest().authenticated()
     }
 
