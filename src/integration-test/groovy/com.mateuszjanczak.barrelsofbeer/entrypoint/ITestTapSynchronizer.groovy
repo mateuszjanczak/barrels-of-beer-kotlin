@@ -32,7 +32,7 @@ class ITestTapSynchronizer extends SpringTestBase {
     def "Should not synchronize taps with sensors when no taps"() {
         when:
         tapSynchronizer.synchronizeTaps()
-        sleep(100)
+        sleep(500)
 
         then:
         noExceptionThrown()
@@ -53,7 +53,7 @@ class ITestTapSynchronizer extends SpringTestBase {
 
         when:
         tapSynchronizer.synchronizeTaps()
-        sleep(100)
+        sleep(500)
 
         then:
         noExceptionThrown()
@@ -81,7 +81,7 @@ class ITestTapSynchronizer extends SpringTestBase {
 
         when:
         tapSynchronizer.synchronizeTaps()
-        sleep(100)
+        sleep(500)
 
         then:
         noExceptionThrown()
@@ -111,7 +111,7 @@ class ITestTapSynchronizer extends SpringTestBase {
 
         when:
         tapSynchronizer.synchronizeTaps()
-        sleep(100)
+        sleep(500)
 
         then:
         noExceptionThrown()

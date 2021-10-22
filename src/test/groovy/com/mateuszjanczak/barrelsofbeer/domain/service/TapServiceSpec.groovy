@@ -148,7 +148,7 @@ class TapServiceSpec extends Specification {
 
         when:
         tapService.saveSensorProperties(tapId, sensorProperties)
-        sleep(100)
+        sleep(500)
 
         then:
         noExceptionThrown()
@@ -171,7 +171,7 @@ class TapServiceSpec extends Specification {
 
         when:
         tapService.saveSensorProperties(tapId, sensorProperties)
-        sleep(100)
+        sleep(500)
 
         then:
         noExceptionThrown()
@@ -198,7 +198,7 @@ class TapServiceSpec extends Specification {
 
         when:
         tapService.saveSensorProperties(tapId, sensorProperties)
-        sleep(100)
+        sleep(500)
 
         then:
         noExceptionThrown()
