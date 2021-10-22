@@ -28,7 +28,7 @@ class TapSynchronizerSpec extends Specification {
 
         when:
         tapSynchronizer.synchronizeTaps()
-        sleep(1000)
+        sleep(500)
 
         then:
         noExceptionThrown()
@@ -48,7 +48,7 @@ class TapSynchronizerSpec extends Specification {
 
         when:
         tapSynchronizer.synchronizeTaps()
-        sleep(1000)
+        sleep(500)
 
         then:
         noExceptionThrown()
@@ -76,7 +76,7 @@ class TapSynchronizerSpec extends Specification {
 
         when:
         tapSynchronizer.synchronizeTaps()
-        sleep(1000)
+        sleep(500)
 
         then:
         noExceptionThrown()
@@ -108,7 +108,7 @@ class TapSynchronizerSpec extends Specification {
 
         when:
         tapSynchronizer.synchronizeTaps()
-        sleep(1000)
+        sleep(500)
 
         then:
         noExceptionThrown()

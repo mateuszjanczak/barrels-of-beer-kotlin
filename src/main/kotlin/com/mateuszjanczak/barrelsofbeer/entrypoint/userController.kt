@@ -1,12 +1,13 @@
-package com.mateuszjanczak.barrelsofbeer.security.entrypoint
+package com.mateuszjanczak.barrelsofbeer.entrypoint
 
-import com.mateuszjanczak.barrelsofbeer.security.data.document.User
-import com.mateuszjanczak.barrelsofbeer.security.data.dto.NewUser
-import com.mateuszjanczak.barrelsofbeer.security.entrypoint.UserEndpoints.DISABLE_USER
-import com.mateuszjanczak.barrelsofbeer.security.entrypoint.UserEndpoints.ENABLE_USER
-import com.mateuszjanczak.barrelsofbeer.security.entrypoint.UserEndpoints.USERS
-import com.mateuszjanczak.barrelsofbeer.security.entrypoint.UserEndpoints.USER_ID
-import com.mateuszjanczak.barrelsofbeer.security.service.UserService
+import com.mateuszjanczak.barrelsofbeer.domain.data.document.User
+import com.mateuszjanczak.barrelsofbeer.domain.service.UserService
+import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.DISABLE_USER
+import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.ENABLE_USER
+import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.USERS
+import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.USER_ID
+import com.mateuszjanczak.barrelsofbeer.security.data.dto.Credentials
+
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -26,13 +27,13 @@ class UserController(
 ) {
 
     @GetMapping(USER_ID)
-    fun getUserById(@PathVariable userId: String): ResponseEntity<User> = ok(userService.getUser(userId))
+    fun getUserById(@PathVariable userId: String): ResponseEntity<User> = ok(userService.getUserById(userId))
 
     @GetMapping(USERS)
     fun getUsers(): ResponseEntity<List<User>> = ok(userService.getUsers())
 
     @PostMapping(USERS)
-    fun createUser(@Valid @RequestBody newUser: NewUser): ResponseEntity<Unit> = ok(userService.createUser(newUser))
+    fun createUser(@Valid @RequestBody credentials: Credentials): ResponseEntity<Unit> = ok(userService.createUser(credentials))
 
     @PostMapping(ENABLE_USER)
     fun enableUser(@PathVariable userId: String): ResponseEntity<Unit> = ok(userService.toggleUserStatus(userId, true))

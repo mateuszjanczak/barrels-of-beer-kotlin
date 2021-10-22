@@ -1,4 +1,4 @@
-package com.mateuszjanczak.barrelsofbeer.security.data.document
+package com.mateuszjanczak.barrelsofbeer.domain.data.document
 
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
