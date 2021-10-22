@@ -11,6 +11,7 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017
       database: barrels-of-beer
+      auto-index-creation: true
 
 # Logging
 sentry:
