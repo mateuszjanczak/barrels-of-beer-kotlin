@@ -20,7 +20,7 @@ class SecurityConfiguration(
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
-        http.cors().disable()
+        http.cors()
         http.csrf().disable()
         http.addFilterAfter(tokenFilter, BasicAuthenticationFilter::class.java)
         http.authorizeRequests()
