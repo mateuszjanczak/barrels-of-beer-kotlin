@@ -1,5 +1,6 @@
 package com.mateuszjanczak.barrelsofbeer.domain.data.document
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
@@ -11,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails
 data class User(
     @Id val id: String = ObjectId.get().toString(),
     @Indexed(unique = true) private val username: String,
-    private val password: String,
+    @JsonIgnore private val password: String,
     private val enabled: Boolean
 ) : UserDetails {
 
@@ -19,13 +20,17 @@ data class User(
 
     override fun getPassword(): String = password
 
+    @JsonIgnore
     override fun isAccountNonExpired(): Boolean = true
 
+    @JsonIgnore
     override fun isAccountNonLocked(): Boolean = true
 
+    @JsonIgnore
     override fun isCredentialsNonExpired(): Boolean = true
 
     override fun isEnabled(): Boolean = enabled
 
+    @JsonIgnore
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> = ArrayList()
 }
