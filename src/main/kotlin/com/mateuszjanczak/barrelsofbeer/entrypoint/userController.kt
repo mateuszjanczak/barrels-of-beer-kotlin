@@ -11,6 +11,7 @@ import com.mateuszjanczak.barrelsofbeer.security.data.dto.Credentials
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -40,6 +41,9 @@ class UserController(
 
     @PostMapping(DISABLE_USER)
     fun disableUser(@PathVariable userId: String): ResponseEntity<Unit> = ok(userService.toggleUserStatus(userId, false))
+
+    @DeleteMapping(USER_ID)
+    fun removeUser(@PathVariable userId: String): ResponseEntity<Unit> = ok(userService.removeUser(userId))
 
 }
 
