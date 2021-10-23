@@ -28,6 +28,7 @@ class DefaultAuthService(
     override fun login(credentials: Credentials): Token? =
         userService.getUserByUsername(credentials.username)
             ?.takeIf { passwordEncoder.matches(credentials.password, it.password) }
+            ?.takeIf { it.isEnabled }
             ?.let { createToken(it) }
 
     override fun refreshToken(refreshToken: String): Token? =
