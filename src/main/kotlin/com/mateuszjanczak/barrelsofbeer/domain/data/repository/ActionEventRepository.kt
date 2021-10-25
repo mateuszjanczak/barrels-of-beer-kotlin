@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ActionEventRepository : MongoRepository<ActionEvent, String> {
-    fun findActionEventByTapIdOrderByIdDesc(tapId: Int): ActionEvent
+    fun findActionEventByTapIdOrderByIdDesc(tapId: Int): List<ActionEvent>
 }
