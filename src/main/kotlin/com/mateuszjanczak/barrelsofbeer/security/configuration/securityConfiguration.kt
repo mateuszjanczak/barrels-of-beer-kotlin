@@ -14,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
+
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 @EnableWebSecurity
@@ -26,13 +29,25 @@ class SecurityConfiguration(
         http.csrf().disable()
         http.addFilterAfter(tokenFilter, BasicAuthenticationFilter::class.java)
         http.authorizeRequests()
-            .antMatchers(LOGIN).permitAll()
-            .antMatchers(REFRESH_TOKEN).permitAll()
-            .antMatchers(REMOVE_REFRESH_TOKEN).permitAll()
+            .antMatchers("/*", "/static/**").permitAll()
+            .antMatchers(LOGIN, REFRESH_TOKEN, REMOVE_REFRESH_TOKEN).permitAll()
             .antMatchers(POST, USERS).permitAll()
             .anyRequest().authenticated()
     }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+}
+
+@Configuration
+class ReactWebConfiguration : WebMvcConfigurer {
+
+    override fun addViewControllers(registry: ViewControllerRegistry) {
+        registry.addViewController("/{spring:\\w+}")
+            .setViewName("forward:/")
+        registry.addViewController("/**/{spring:\\w+}")
+            .setViewName("forward:/")
+        registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
+            .setViewName("forward:/")
+    }
 }

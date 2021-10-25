@@ -119,12 +119,12 @@ class DefaultEventService(
                 tapId = tap.tapId,
                 barrelContent = tap.barrelContent,
                 currentLevel = tap.currentLevel,
-                totalUsage = tap.capacity,
+                totalUsage = 0L,
                 singleUsage = 0L,
                 logType = logType
             )
         )
     }
 
-    private fun getLastTotalUsage(tapId: Int) = actionEventRepository.findActionEventByTapIdOrderByIdDesc(tapId).totalUsage
+    private fun getLastTotalUsage(tapId: Int) = actionEventRepository.findActionEventByTapIdOrderByIdDesc(tapId)[0].totalUsage
 }
