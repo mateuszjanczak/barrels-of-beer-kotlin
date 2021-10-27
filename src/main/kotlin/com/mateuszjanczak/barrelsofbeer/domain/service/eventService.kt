@@ -17,9 +17,9 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
-
 interface EventService {
     fun saveEvent(tap: Tap, logType: LogType)
+    fun saveEvent(previousTap: Tap, tap: Tap, logType: LogType)
     fun getActionEvents(): List<ActionEvent>
     fun getActionEvents(page: Int): Page<ActionEvent>
     fun getTemperatureEvents(): List<TemperatureEvent>
@@ -33,13 +33,21 @@ class DefaultEventService(
 ) : EventService {
 
     override fun saveEvent(tap: Tap, logType: LogType) {
+        saveEvent(tap, logType, null)
+    }
+
+    override fun saveEvent(previousTap: Tap, tap: Tap, logType: LogType) {
+        saveEvent(tap, logType, previousTap)
+    }
+
+    private fun saveEvent(tap: Tap, logType: LogType, previousTap: Tap?) {
         when (logType) {
             TAP_NEW -> saveTapNew(tap)
             TAP_SET -> saveTapSet(tap)
             TAP_REMOVE -> saveTapRemove(tap)
-            TAP_READ -> saveTapReadCurrentLevel(tap)
             TAP_READ_TEMPERATURE -> saveTapReadTemperature(tap)
             TAP_ENABLE, TAP_DISABLE -> saveToggleTap(tap, logType)
+            TAP_READ -> previousTap?.let{ saveTapReadCurrentLevel(previousTap, tap)}
         }
     }
 
@@ -90,14 +98,14 @@ class DefaultEventService(
         )
     }
 
-    private fun saveTapReadCurrentLevel(tap: Tap) {
+    private fun saveTapReadCurrentLevel(previousTap: Tap, tap: Tap) {
         actionEventRepository.save(
             ActionEvent(
                 tapId = tap.tapId,
                 barrelContent = tap.barrelContent,
                 currentLevel = tap.currentLevel,
                 totalUsage = tap.capacity - tap.currentLevel,
-                singleUsage = tap.capacity - tap.currentLevel - getLastTotalUsage(tap.tapId),
+                singleUsage = previousTap.currentLevel - tap.currentLevel,
                 logType = TAP_READ
             )
         )
@@ -125,6 +133,4 @@ class DefaultEventService(
             )
         )
     }
-
-    private fun getLastTotalUsage(tapId: Int) = actionEventRepository.findActionEventByTapIdOrderByIdDesc(tapId)[0].totalUsage
 }

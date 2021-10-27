@@ -1,15 +1,13 @@
 package com.mateuszjanczak.barrelsofbeer.domain.service
 
-import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_NEW
-import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ
-import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ_TEMPERATURE
-import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_SET
+import com.mateuszjanczak.barrelsofbeer.common.LogType.*
 import com.mateuszjanczak.barrelsofbeer.domain.SensorProperties
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
 import com.mateuszjanczak.barrelsofbeer.domain.data.dto.TapDetails
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TapRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import kotlin.math.abs
 
 interface TapService {
     fun createTap(tapId: Int)
@@ -55,20 +53,22 @@ class DefaultTapService(
     override fun saveSensorProperties(tapId: Int, sensorProperties: SensorProperties) {
         tapRepository.findByIdOrNull(tapId)?.let { previous ->
             val currentLevel = previous.capacity - sensorProperties.currentLevel
-            tapRepository.save(
-                Tap(
-                    tapId = previous.tapId,
-                    barrelContent = previous.barrelContent,
-                    temperature = sensorProperties.temperature,
-                    currentLevel = currentLevel,
-                    capacity = previous.capacity,
-                    enabled = previous.enabled
-                )
-            ).let { next ->
-                if (previous.currentLevel != next.capacity && previous.currentLevel > 0)
-                    eventService.saveEvent(next, TAP_READ)
-                if (previous.temperature != next.temperature)
-                    eventService.saveEvent(next, TAP_READ_TEMPERATURE)
+            if(currentLevel > 0) {
+                tapRepository.save(
+                    Tap(
+                        tapId = previous.tapId,
+                        barrelContent = previous.barrelContent,
+                        temperature = sensorProperties.temperature,
+                        currentLevel = currentLevel,
+                        capacity = previous.capacity,
+                        enabled = previous.enabled
+                    )
+                ).let { next ->
+                    if (previous.currentLevel != currentLevel)
+                        eventService.saveEvent(previous, next, TAP_READ)
+                    if (abs(previous.temperature - next.temperature) >= 0.5)
+                        eventService.saveEvent(next, TAP_READ_TEMPERATURE)
+                }
             }
         }
     }
