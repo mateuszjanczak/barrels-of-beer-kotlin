@@ -5,6 +5,7 @@ import com.mateuszjanczak.barrelsofbeer.domain.SensorProperties
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
 import com.mateuszjanczak.barrelsofbeer.domain.data.dto.TapDetails
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TapRepository
+import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import kotlin.math.abs
@@ -23,10 +24,16 @@ class DefaultTapService(
     private val eventService: EventService
 ) : TapService {
 
+    companion object {
+        private val log = LoggerFactory.getLogger(DefaultTapService::class.java)
+    }
+
     override fun createTap(tapId: Int) {
         tapRepository.save(
             Tap(tapId)
-        ).let { eventService.saveEvent(it, TAP_NEW) }
+        )
+            .let { eventService.saveEvent(it, TAP_NEW) }
+            .let { log.warn("Tap $tapId was created") }
     }
 
     override fun setTap(tapId: Int, tapDetails: TapDetails) {
@@ -41,7 +48,9 @@ class DefaultTapService(
                         currentLevel = currentLevel,
                         capacity = tapDetails.capacity
                     )
-                ).let { next -> eventService.saveEvent(next, TAP_SET) }
+                )
+                    .let { next -> eventService.saveEvent(next, TAP_SET) }
+                    .let { log.warn("Tap $tapId was set to the following values: $tapDetails") }
             }
         }
     }
@@ -63,12 +72,14 @@ class DefaultTapService(
                         capacity = previous.capacity,
                         enabled = previous.enabled
                     )
-                ).let { next ->
-                    if (previous.currentLevel != currentLevel)
-                        eventService.saveEvent(previous, next, TAP_READ)
-                    if (abs(previous.temperature - next.temperature) >= 0.5)
-                        eventService.saveEvent(next, TAP_READ_TEMPERATURE)
-                }
+                )
+                    .let { next ->
+                        if (previous.currentLevel != currentLevel)
+                            eventService.saveEvent(previous, next, TAP_READ)
+                        if (abs(previous.temperature - next.temperature) >= 0.5)
+                            eventService.saveEvent(next, TAP_READ_TEMPERATURE)
+                    }
+                    .let { log.warn("Tap $tapId has been updated with the following values: $sensorProperties") }
             }
         }
     }

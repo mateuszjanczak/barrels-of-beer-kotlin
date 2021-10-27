@@ -13,6 +13,7 @@ import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.TemperatureEvent
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.ActionEventRepository
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TemperatureEventRepository
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -32,6 +33,10 @@ class DefaultEventService(
     private val temperatureEventRepository: TemperatureEventRepository
 ) : EventService {
 
+    companion object {
+        private val log = LoggerFactory.getLogger(DefaultEventService::class.java)
+    }
+
     override fun saveEvent(tap: Tap, logType: LogType) {
         saveEvent(tap, logType, null)
     }
@@ -48,7 +53,7 @@ class DefaultEventService(
             TAP_READ_TEMPERATURE -> saveTapReadTemperature(tap)
             TAP_ENABLE, TAP_DISABLE -> saveToggleTap(tap, logType)
             TAP_READ -> previousTap?.let{ saveTapReadCurrentLevel(previousTap, tap)}
-        }
+        }.also { log.debug("New event on tap ${tap.tapId} with action ${logType.name}") }
     }
 
     override fun getActionEvents(): List<ActionEvent> = actionEventRepository.findAll()

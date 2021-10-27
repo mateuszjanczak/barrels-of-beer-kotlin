@@ -20,8 +20,5 @@ spring:
 
 # Logging
 sentry:
-  logging:
-    minimum-event-level: info
-    minimum-breadcrumb-level: debug
   dsn: <hidden>
   traces-sample-rate: 1.0

@@ -2,6 +2,7 @@ package com.mateuszjanczak.barrelsofbeer.utils
 
 import com.mateuszjanczak.barrelsofbeer.domain.SensorData
 import com.mateuszjanczak.barrelsofbeer.domain.SensorProperties
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 typealias Hex = String
@@ -10,12 +11,18 @@ typealias Bin = String
 @Component
 class SensorExtractor {
 
+    companion object {
+        private val log = LoggerFactory.getLogger(SensorExtractor::class.java)
+    }
+
     fun getSensorPropertiesFromSensorData(sensorData: SensorData): SensorProperties {
         val hex = sensorData.value
         val bin = hexToBin(hex)
 
         val currentLevel = getCurrentLevel(bin.currentLevel())
         val temperature = getTemperature(bin.temperature())
+
+        log.debug("Hex: $hex Bin: $bin CurrentLevel: $currentLevel Temperature: $temperature")
 
         return SensorProperties(currentLevel, temperature)
     }

@@ -11,6 +11,7 @@ import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.ActionEventRepository
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TapRepository
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TemperatureEventRepository
+import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -28,6 +29,10 @@ class DefaultAdminService(
     private val eventService: EventService
 ) : AdminService {
 
+    companion object {
+        private val log = LoggerFactory.getLogger(DefaultAdminService::class.java)
+    }
+
     override fun toggleTap(tapId: Int, enabled: Boolean) {
         tapRepository.findByIdOrNull(tapId)?.let { previous ->
             tapRepository.save(
@@ -41,6 +46,7 @@ class DefaultAdminService(
                 )
             ).let { next ->
                 eventService.saveEvent(next, if (enabled) TAP_ENABLE else TAP_DISABLE)
+                log.warn("Tap $tapId status changed to {}", if (enabled) TAP_ENABLE else TAP_DISABLE)
             }
         }
     }
@@ -49,6 +55,7 @@ class DefaultAdminService(
         tapRepository.findByIdOrNull(tapId)?.let { previous ->
             tapRepository.deleteById(tapId).let {
                 eventService.saveEvent(previous, TAP_REMOVE)
+                    .also { log.warn("Tap $tapId has been removed") }
             }
         }
     }
@@ -58,6 +65,6 @@ class DefaultAdminService(
             TAPS -> tapRepository.deleteAll()
             ACTION_EVENTS -> actionEventRepository.deleteAll()
             TEMPERATURE_EVENTS -> temperatureEventRepository.deleteAll()
-        }
+        }.also { log.warn("Table $tableType has been removed") }
 
 }

@@ -13,16 +13,15 @@ class TapSynchronizer(
 
     @Scheduled(fixedRate = 1000)
     fun synchronizeTaps() {
-        val tapList = tapService.getTapList()
-
-        tapList.filter { it.enabled }
+        tapService.getTapList().filter { it.enabled }
             .forEach { synchronizeTap(it.tapId) }
     }
 
     private fun synchronizeTap(tapId: Int) =
         Thread {
-            val sensorProperties = sensorService.getSensorProperties(tapId)
-            sensorProperties?.let { tapService.saveSensorProperties(tapId, it) }
+            sensorService.getSensorProperties(tapId)?.let { sensorProperties ->
+                tapService.saveSensorProperties(tapId, sensorProperties)
+            }
         }.start()
 
 }
