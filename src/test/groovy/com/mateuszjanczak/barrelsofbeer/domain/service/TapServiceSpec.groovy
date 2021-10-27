@@ -121,9 +121,9 @@ class TapServiceSpec extends Specification {
     def "Should return the saved taps when getting the tap list"() {
         given:
         def tapList = [
-            tap(tapId: 1, barrelContent: "Harnold"),
-            tap(tapId: 2, barrelContent: "Tyskacz"),
-            tap(tapId: 3, barrelContent: "Książ Czarny")
+                tap(tapId: 1, barrelContent: "Harnold"),
+                tap(tapId: 2, barrelContent: "Tyskacz"),
+                tap(tapId: 3, barrelContent: "Książ Czarny")
         ]
 
         when:
@@ -162,6 +162,86 @@ class TapServiceSpec extends Specification {
         0 * eventService.saveEvent(_, _)
     }
 
+    def "Should not save sensor properties when calculated current level is below 0"() {
+        given:
+        def tapId = 1
+        def initTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 5000L, capacity: 30000L, enabled: true)
+        def sensorProperties = sensorProperties(currentLevel: 32000, temperature: 14.9f)
+
+        when:
+        tapService.saveSensorProperties(tapId, sensorProperties)
+        sleep(500)
+
+        then:
+        noExceptionThrown()
+
+        and:
+        1 * tapRepository.findById(tapId) >> {
+            Optional.ofNullable(initTap)
+        }
+
+        and:
+        0 * tapRepository.save(_) >> _
+
+        and:
+        0 * eventService.saveEvent(_, _)
+        0 * eventService.saveEvent(_, _)
+    }
+
+    def "Should save sensor properties but not logging the same current level"() {
+        given:
+        def tapId = 1
+        def initTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 5000L, capacity: 30000L, enabled: true)
+        def sensorProperties = sensorProperties(currentLevel: 25000L, temperature: 14.9f)
+        def finalTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 14.9f, currentLevel: 5000L, capacity: 30000L, enabled: true)
+
+        when:
+        tapService.saveSensorProperties(tapId, sensorProperties)
+        sleep(500)
+
+        then:
+        noExceptionThrown()
+
+        and:
+        1 * tapRepository.findById(tapId) >> {
+            Optional.ofNullable(initTap)
+        }
+
+        and:
+        1 * tapRepository.save(finalTap) >> finalTap
+
+        and:
+        0 * eventService.saveEvent(finalTap, TAP_READ)
+        1 * eventService.saveEvent(finalTap, TAP_READ_TEMPERATURE)
+    }
+
+    def "Should save sensor properties but not logging similar temperature"() {
+        given:
+        def tapId = 1
+        def initTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 5000L, capacity: 30000L, enabled: true)
+        def sensorProperties = sensorProperties(currentLevel: 25000L, temperature: 13.8f)
+        def finalTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.8f, currentLevel: 5000L, capacity: 30000L, enabled: true)
+
+        when:
+        tapService.saveSensorProperties(tapId, sensorProperties)
+        sleep(500)
+
+        then:
+        noExceptionThrown()
+
+        and:
+        1 * tapRepository.findById(tapId) >> {
+            Optional.ofNullable(initTap)
+        }
+
+        and:
+        1 * tapRepository.save(finalTap) >> finalTap
+
+        and:
+        0 * eventService.saveEvent(finalTap, TAP_READ)
+        0 * eventService.saveEvent(finalTap, TAP_READ_TEMPERATURE)
+    }
+
     def "Should save sensor properties but not logging the same temperature"() {
         given:
         def tapId = 1
@@ -185,14 +265,14 @@ class TapServiceSpec extends Specification {
         1 * tapRepository.save(finalTap) >> finalTap
 
         and:
-        1 * eventService.saveEvent(finalTap, TAP_READ)
+        1 * eventService.saveEvent(initTap, finalTap, TAP_READ)
         0 * eventService.saveEvent(finalTap, TAP_READ_TEMPERATURE)
     }
 
     def "Should save sensor properties"() {
         given:
         def tapId = 1
-        def initTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 14.0f, currentLevel: 25000L, capacity: 30000L, enabled: true)
+        def initTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 14.5f, currentLevel: 25000L, capacity: 30000L, enabled: true)
         def sensorProperties = sensorProperties(currentLevel: 12000L, temperature: 13.9f)
         def finalTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 18000L, capacity: 30000L, enabled: true)
 
@@ -212,7 +292,7 @@ class TapServiceSpec extends Specification {
         1 * tapRepository.save(finalTap) >> finalTap
 
         and:
-        1 * eventService.saveEvent(finalTap, TAP_READ)
+        1 * eventService.saveEvent(initTap, finalTap, TAP_READ)
         1 * eventService.saveEvent(finalTap, TAP_READ_TEMPERATURE)
     }
 }
