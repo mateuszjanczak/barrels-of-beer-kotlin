@@ -23,13 +23,11 @@ class DefaultSensorClient(
             throw SensorHttpClientException("HttpClientException", e)
         }
 
-        val sensorResponse = try {
+        return try {
             objectMapper.readValue(result.text, SensorResponse::class.java)
         } catch (e: JsonProcessingException) {
             throw SensorHttpClientException("JsonProcessingException", e)
         }
-
-        return sensorResponse
     }
 
     private fun String.fillSensorId(id: Int): String = this.replace("SENSOR_ID", "$id")
