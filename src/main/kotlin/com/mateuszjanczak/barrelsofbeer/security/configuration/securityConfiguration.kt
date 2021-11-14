@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod.POST
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
@@ -33,6 +34,7 @@ class SecurityConfiguration(
             .antMatchers(LOGIN, REFRESH_TOKEN, REMOVE_REFRESH_TOKEN).permitAll()
             .antMatchers(POST, USERS).permitAll()
             .anyRequest().authenticated()
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
 
     @Bean
