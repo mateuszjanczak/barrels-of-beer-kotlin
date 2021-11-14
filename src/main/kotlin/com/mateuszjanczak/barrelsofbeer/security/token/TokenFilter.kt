@@ -11,11 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
-import org.springframework.web.filter.GenericFilterBean
-import java.util.Objects
+import org.springframework.web.filter.OncePerRequestFilter
 import javax.servlet.FilterChain
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -23,26 +20,18 @@ import javax.servlet.http.HttpServletResponse
 class TokenFilter(
     private val userService: UserService,
     private val tokenProvider: TokenProvider
-) : GenericFilterBean() {
+) : OncePerRequestFilter() {
 
-    override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
-        val request = servletRequest as HttpServletRequest
-        val response = servletResponse as HttpServletResponse
-
-        val header = request.getHeader(AUTHORIZATION_HEADER)
-
-        if (Objects.isNull(header) || !header.startsWith(TOKEN_PREFIX)) {
-            filterChain.doFilter(request, response)
-            return
-        }
-
+    override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         try {
-            val token = header.replace(TOKEN_PREFIX, "")
-            val authentication = getAuthentication(token)
-            SecurityContextHolder.getContext().authentication = authentication
+            val header = request.getHeader(AUTHORIZATION_HEADER)
+            if(header != null && header.startsWith(TOKEN_PREFIX)) {
+                val token = header.replace(TOKEN_PREFIX, "")
+                SecurityContextHolder.getContext().authentication = getAuthentication(token)
+            }
         } catch (e: JwtException) {
             response.status = UNAUTHORIZED.value()
-            response.contentType = APPLICATION_JSON_VALUE;
+            response.contentType = APPLICATION_JSON_VALUE
             response.outputStream.write(ErrorMessage(e.message ?: "Invalid token", UNAUTHORIZED.name).toJson().toByteArray())
             return
         }
