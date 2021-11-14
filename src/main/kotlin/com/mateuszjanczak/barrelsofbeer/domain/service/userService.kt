@@ -3,14 +3,11 @@ package com.mateuszjanczak.barrelsofbeer.domain.service
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.User
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.UserRepository
 import com.mateuszjanczak.barrelsofbeer.security.data.dto.Credentials
-import org.springframework.context.annotation.Lazy
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
-interface UserService : UserDetailsService {
+interface UserService {
     fun createUser(credentials: Credentials)
     fun getUsers(): List<User>
     fun getUserById(id: String): User?
@@ -22,7 +19,7 @@ interface UserService : UserDetailsService {
 @Service
 class DefaultUserService(
     private val userRepository: UserRepository,
-    @Lazy private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder
 ) : UserService {
 
     override fun createUser(credentials: Credentials) {
@@ -55,8 +52,4 @@ class DefaultUserService(
             )
         }
     }
-
-    override fun loadUserByUsername(username: String): User =
-        userRepository.findById(username).orElseThrow { UsernameNotFoundException(username) }
-
 }
