@@ -1,5 +1,6 @@
 package com.mateuszjanczak.barrelsofbeer.domain.service
 
+import com.mateuszjanczak.barrelsofbeer.common.ContentType
 import com.mateuszjanczak.barrelsofbeer.common.LogType.*
 import com.mateuszjanczak.barrelsofbeer.domain.SensorProperties
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
@@ -80,6 +81,8 @@ class DefaultTapService(
                             eventService.saveEvent(next, TAP_READ_TEMPERATURE)
                     }
                     .let { log.warn("Tap $tapId has been updated with the following values: $sensorProperties") }
+            } else {
+                setTap(tapId, TapDetails(ContentType.valueOf(previous.barrelContent.replace(' ', '_')), previous.capacity + 100000L))
             }
         }
     }
