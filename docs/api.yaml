@@ -1,0 +1,964 @@
+openapi: 3.0.0
+info:
+  version: 1.0-oas3
+  title: Barrels of Beer
+  contact:
+    name: Mateusz Janczak
+    url: https://github.com/mateuszjanczak
+    email: mateuszjanczak.mj@gmail.com
+tags:
+  - name: admin-controller
+    description: Admin Controller
+  - name: auth-controller
+    description: Auth Controller
+  - name: event-controller
+    description: Event Controller
+  - name: statistics-controller
+    description: Statistics Controller
+  - name: tap-controller
+    description: Tap Controller
+  - name: user-controller
+    description: User Controller
+paths:
+  /api/admin/database/{tableType}/reset:
+    post:
+      tags:
+        - admin-controller
+      summary: resetDatabase
+      operationId: resetDatabaseUsingPOST
+      parameters:
+        - name: tableType
+          in: path
+          description: tableType
+          required: true
+          schema:
+            type: string
+            enum:
+              - ACTION_EVENTS
+              - TAPS
+              - TEMPERATURE_EVENTS
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/admin/tap/{tapId}/disable:
+    post:
+      tags:
+        - admin-controller
+      summary: disableTap
+      operationId: disableTapUsingPOST
+      parameters:
+        - name: tapId
+          in: path
+          description: tapId
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/admin/tap/{tapId}/enable:
+    post:
+      tags:
+        - admin-controller
+      summary: enableTap
+      operationId: enableTapUsingPOST
+      parameters:
+        - name: tapId
+          in: path
+          description: tapId
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/admin/tap/{tapId}/remove:
+    post:
+      tags:
+        - admin-controller
+      summary: removeTap
+      operationId: removeTapUsingPOST
+      parameters:
+        - name: tapId
+          in: path
+          description: tapId
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/auth/login:
+    post:
+      tags:
+        - auth-controller
+      summary: login
+      operationId: loginUsingPOST
+      requestBody:
+        $ref: '#/components/requestBodies/Credentials'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Token'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /api/auth/refreshToken/{refreshToken}:
+    post:
+      tags:
+        - auth-controller
+      summary: refreshToken
+      operationId: refreshTokenUsingPOST
+      parameters:
+        - name: refreshToken
+          in: path
+          description: refreshToken
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Token'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /api/auth/remove/{refreshToken}:
+    post:
+      tags:
+        - auth-controller
+      summary: removeRefreshToken
+      operationId: removeRefreshTokenUsingPOST
+      parameters:
+        - name: refreshToken
+          in: path
+          description: refreshToken
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /api/events/action/download:
+    get:
+      tags:
+        - event-controller
+      summary: downloadActionEventsAsCsv
+      operationId: downloadActionEventsAsCsvUsingGET
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Resource'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/events/action/{page}:
+    get:
+      tags:
+        - event-controller
+      summary: getActionEvents
+      operationId: getActionEventsUsingGET
+      parameters:
+        - name: page
+          in: path
+          description: page
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageActionEvent'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/events/temperature/download:
+    get:
+      tags:
+        - event-controller
+      summary: downloadTemperatureEventsAsCsv
+      operationId: downloadTemperatureEventsAsCsvUsingGET
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Resource'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/events/temperature/{page}:
+    get:
+      tags:
+        - event-controller
+      summary: getTemperatureEvents
+      operationId: getTemperatureEventsUsingGET
+      parameters:
+        - name: page
+          in: path
+          description: page
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageTemperatureEvent'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/ranking:
+    get:
+      tags:
+        - statistics-controller
+      summary: getRanking
+      operationId: getRankingUsingGET
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ranking'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/statistics/from/{from}/to/{to}/interval/{interval}:
+    get:
+      tags:
+        - statistics-controller
+      summary: getStatistics
+      operationId: getStatisticsUsingGET
+      parameters:
+        - name: from
+          in: path
+          description: from
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: interval
+          in: path
+          description: interval
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: to
+          in: path
+          description: to
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Statistics'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/taps:
+    get:
+      tags:
+        - tap-controller
+      summary: getTaps
+      operationId: getTapsUsingGET
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tap'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+    post:
+      tags:
+        - tap-controller
+      summary: createTap
+      operationId: createTapUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTap'
+        description: newTap
+        required: true
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/taps/{tapId}:
+    get:
+      tags:
+        - tap-controller
+      summary: getTapById
+      operationId: getTapByIdUsingGET
+      parameters:
+        - name: tapId
+          in: path
+          description: tapId
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Tap'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+    post:
+      tags:
+        - tap-controller
+      summary: setTap
+      operationId: setTapUsingPOST
+      parameters:
+        - name: tapId
+          in: path
+          description: tapId
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TapDetails'
+        description: tapDetails
+        required: true
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/users:
+    get:
+      tags:
+        - user-controller
+      summary: getUsers
+      operationId: getUsersUsingGET
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+    post:
+      tags:
+        - user-controller
+      summary: createUser
+      operationId: createUserUsingPOST
+      requestBody:
+        $ref: '#/components/requestBodies/Credentials'
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/users/{userId}:
+    get:
+      tags:
+        - user-controller
+      summary: getUserById
+      operationId: getUserByIdUsingGET
+      parameters:
+        - name: userId
+          in: path
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+    delete:
+      tags:
+        - user-controller
+      summary: removeUser
+      operationId: removeUserUsingDELETE
+      parameters:
+        - name: userId
+          in: path
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - Token: []
+  /api/users/{userId}/disable:
+    post:
+      tags:
+        - user-controller
+      summary: disableUser
+      operationId: disableUserUsingPOST
+      parameters:
+        - name: userId
+          in: path
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+  /api/users/{userId}/enable:
+    post:
+      tags:
+        - user-controller
+      summary: enableUser
+      operationId: enableUserUsingPOST
+      parameters:
+        - name: userId
+          in: path
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - Token: []
+servers:
+  - url: http://localhost:8080/
+components:
+  requestBodies:
+    Credentials:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Credentials'
+      description: credentials
+      required: true
+  securitySchemes:
+    Token:
+      type: apiKey
+      name: Authorization
+      in: header
+  schemas:
+    ActionEvent:
+      type: object
+      required:
+        - barrelContent
+        - currentLevel
+        - date
+        - id
+        - logType
+        - singleUsage
+        - tapId
+        - totalUsage
+      properties:
+        barrelContent:
+          type: string
+        currentLevel:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date-time
+        id:
+          type: string
+        logType:
+          type: string
+          enum:
+            - TAP_DISABLE
+            - TAP_ENABLE
+            - TAP_NEW
+            - TAP_READ
+            - TAP_READ_TEMPERATURE
+            - TAP_REMOVE
+            - TAP_SET
+        singleUsage:
+          type: integer
+          format: int64
+        tapId:
+          type: integer
+          format: int32
+        totalUsage:
+          type: integer
+          format: int64
+      title: ActionEvent
+    Credentials:
+      type: object
+      required:
+        - password
+        - username
+      properties:
+        password:
+          type: string
+        username:
+          type: string
+      title: Credentials
+    InputStream:
+      type: object
+      title: InputStream
+    NewTap:
+      type: object
+      properties:
+        tapId:
+          type: integer
+          format: int32
+      title: NewTap
+    Pageable:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        sort:
+          $ref: '#/components/schemas/Sort'
+        unpaged:
+          type: boolean
+      title: Pageable
+    PageActionEvent:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionEvent'
+        empty:
+          type: boolean
+        first:
+          type: boolean
+        last:
+          type: boolean
+        number:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        size:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/Sort'
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+      title: Page«ActionEvent»
+    PageTemperatureEvent:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemperatureEvent'
+        empty:
+          type: boolean
+        first:
+          type: boolean
+        last:
+          type: boolean
+        number:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        size:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/Sort'
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+      title: Page«TemperatureEvent»
+    Ranking:
+      type: object
+      required:
+        - barrelContent
+        - count
+      properties:
+        barrelContent:
+          type: string
+        count:
+          type: integer
+          format: int64
+      title: Ranking
+    Resource:
+      type: object
+      properties:
+        description:
+          type: string
+        file:
+          type: object
+        filename:
+          type: string
+        inputStream:
+          $ref: '#/components/schemas/InputStream'
+        open:
+          type: boolean
+        readable:
+          type: boolean
+        uri:
+          type: string
+          format: uri
+        url:
+          type: string
+          format: url
+      title: Resource
+    Sort:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+      title: Sort
+    Statistics:
+      type: object
+      required:
+        - items
+        - name
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatisticsData'
+        name:
+          type: string
+      title: Statistics
+    StatisticsData:
+      type: object
+      required:
+        - count
+        - date
+      properties:
+        count:
+          type: integer
+          format: int64
+        date:
+          type: string
+      title: StatisticsData
+    Tap:
+      type: object
+      required:
+        - barrelContent
+        - capacity
+        - currentLevel
+        - enabled
+        - tapId
+        - temperature
+      properties:
+        barrelContent:
+          type: string
+        capacity:
+          type: integer
+          format: int64
+        currentLevel:
+          type: integer
+          format: int64
+        enabled:
+          type: boolean
+        tapId:
+          type: integer
+          format: int32
+        temperature:
+          type: number
+          format: float
+      title: Tap
+    TapDetails:
+      type: object
+      required:
+        - contentType
+      properties:
+        capacity:
+          type: integer
+          format: int64
+        contentType:
+          type: string
+          enum:
+            - CHMYZ_Pils
+            - GAZDA_Marcowe
+            - KADUK_Podwójny_Koźlak
+            - KICARZ_Koźlak
+            - KRASA_Weizen
+            - SĘDEK_IPA
+            - UPIR_Dunkel
+      title: TapDetails
+    TemperatureEvent:
+      type: object
+      required:
+        - barrelContent
+        - date
+        - id
+        - tapId
+        - temperature
+      properties:
+        barrelContent:
+          type: string
+        date:
+          type: string
+          format: date-time
+        id:
+          type: string
+        tapId:
+          type: integer
+          format: int32
+        temperature:
+          type: number
+          format: float
+      title: TemperatureEvent
+    Token:
+      type: object
+      required:
+        - expirationTime
+        - refreshToken
+        - token
+      properties:
+        expirationTime:
+          type: integer
+          format: int64
+        refreshToken:
+          type: string
+        token:
+          type: string
+      title: Token
+    User:
+      type: object
+      required:
+        - enabled
+        - id
+        - username
+      properties:
+        enabled:
+          type: boolean
+        id:
+          type: string
+        username:
+          type: string
+      title: User
