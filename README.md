@@ -37,3 +37,5 @@ mvn test
 ```
 mvn integration-test
 ```
+## OpenAPI Specification
+The documentation file can be found in the [api.yaml](docs/api.yaml)
