@@ -1,4 +1,4 @@
-package com.mateuszjanczak.barrelsofbeer.security.configuration
+package com.mateuszjanczak.barrelsofbeer.configuration
 
 import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.USERS
 import com.mateuszjanczak.barrelsofbeer.security.entrypoint.AuthEndpoints.LOGIN
@@ -15,9 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
-
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 @EnableWebSecurity
@@ -39,17 +36,4 @@ class SecurityConfiguration(
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
-}
-
-@Configuration
-class ReactWebConfiguration : WebMvcConfigurer {
-
-    override fun addViewControllers(registry: ViewControllerRegistry) {
-        registry.addViewController("/{spring:\\w+}")
-            .setViewName("forward:/")
-        registry.addViewController("/**/{spring:\\w+}")
-            .setViewName("forward:/")
-        registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
-            .setViewName("forward:/")
-    }
 }
