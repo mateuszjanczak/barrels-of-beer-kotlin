@@ -75,7 +75,7 @@ class ITestTapSynchronizer extends SpringTestBase {
         tapRepository.saveAll(tapList)
 
         and:
-        sensorMock.getSensorDataSuccessWith(id: 1, hex: "3F73333300000278")
+        sensorMock.getSensorDataSuccessWith(id: 1, hex: "41A75C290000022C")
         sensorMock.getSensorDataFailWith(id: 2)
         sensorMock.getSensorDataSuccessWith(id: 3, hex: "41A95C290000022C")
 
@@ -88,7 +88,7 @@ class ITestTapSynchronizer extends SpringTestBase {
 
         and:
         tapService.getTapList() == [
-            tap(tapId: 1, currentLevel: 29050L, temperature: 15.8f),
+            tap(tapId: 1, currentLevel: 9080L, temperature: 13.9f),
             tap(tapId: 2, currentLevel: 20000L, temperature: 5.0f),
             tap(tapId: 3, currentLevel: 8830L, temperature: 13.9f),
             tap(tapId: 4, currentLevel: 20000L, temperature: 5.0f, enabled: false)
@@ -98,9 +98,9 @@ class ITestTapSynchronizer extends SpringTestBase {
     def "Should synchronize taps with sensors"() {
         given:
         def tapList = [
-            tap(tapId: 1),
-            tap(tapId: 2),
-            tap(tapId: 3)
+            tap(tapId: 1, currentLevel: 30000L),
+            tap(tapId: 2, currentLevel: 30000L),
+            tap(tapId: 3, currentLevel: 30000L)
         ]
         tapRepository.saveAll(tapList)
 

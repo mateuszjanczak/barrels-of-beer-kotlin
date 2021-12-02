@@ -8,6 +8,7 @@ import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ_TEMPERATURE
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_REMOVE
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_SET
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_RESET
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.ActionEvent
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.TemperatureEvent
@@ -45,17 +46,6 @@ class DefaultEventService(
         saveEvent(tap, logType, previousTap)
     }
 
-    private fun saveEvent(tap: Tap, logType: LogType, previousTap: Tap?) {
-        when (logType) {
-            TAP_NEW -> saveTapNew(tap)
-            TAP_SET -> saveTapSet(tap)
-            TAP_REMOVE -> saveTapRemove(tap)
-            TAP_READ_TEMPERATURE -> saveTapReadTemperature(tap)
-            TAP_ENABLE, TAP_DISABLE -> saveToggleTap(tap, logType)
-            TAP_READ -> previousTap?.let{ saveTapReadCurrentLevel(previousTap, tap)}
-        }.also { log.debug("New event on tap ${tap.tapId} with action ${logType.name}") }
-    }
-
     override fun getActionEvents(): List<ActionEvent> = actionEventRepository.findAll()
 
     override fun getActionEvents(page: Int): Page<ActionEvent> = actionEventRepository.findAll(PageRequest.of(page, 20))
@@ -63,6 +53,18 @@ class DefaultEventService(
     override fun getTemperatureEvents(): List<TemperatureEvent> = temperatureEventRepository.findAll()
 
     override fun getTemperatureEvents(page: Int): Page<TemperatureEvent> = temperatureEventRepository.findAll(PageRequest.of(page, 20))
+
+    private fun saveEvent(tap: Tap, logType: LogType, previousTap: Tap?) {
+        when (logType) {
+            TAP_NEW -> saveTapNew(tap)
+            TAP_SET -> saveTapSet(tap)
+            TAP_REMOVE -> saveTapRemove(tap)
+            TAP_READ -> previousTap?.let{ saveTapReadCurrentLevel(previousTap, tap)}
+            TAP_READ_TEMPERATURE -> saveTapReadTemperature(tap)
+            TAP_ENABLE, TAP_DISABLE -> saveToggleTap(tap, logType)
+            TAP_RESET -> saveTapReset(tap)
+        }.also { log.debug("New event on tap ${tap.tapId} with action ${logType.name}") }
+    }
 
     private fun saveTapNew(tap: Tap) {
         actionEventRepository.save(
@@ -77,19 +79,6 @@ class DefaultEventService(
         )
     }
 
-    private fun saveTapRemove(tap: Tap) {
-        actionEventRepository.save(
-            ActionEvent(
-                tapId = tap.tapId,
-                barrelContent = tap.barrelContent,
-                currentLevel = tap.currentLevel,
-                totalUsage = tap.capacity - tap.currentLevel,
-                singleUsage = 0L,
-                logType = TAP_REMOVE
-            )
-        )
-    }
-
     private fun saveTapSet(tap: Tap) {
         actionEventRepository.save(
             ActionEvent(
@@ -99,6 +88,19 @@ class DefaultEventService(
                 totalUsage = tap.capacity - tap.currentLevel,
                 singleUsage = 0L,
                 logType = TAP_SET
+            )
+        )
+    }
+
+    private fun saveTapRemove(tap: Tap) {
+        actionEventRepository.save(
+            ActionEvent(
+                tapId = tap.tapId,
+                barrelContent = tap.barrelContent,
+                currentLevel = tap.currentLevel,
+                totalUsage = tap.capacity - tap.currentLevel,
+                singleUsage = 0L,
+                logType = TAP_REMOVE
             )
         )
     }
@@ -135,6 +137,19 @@ class DefaultEventService(
                 totalUsage = 0L,
                 singleUsage = 0L,
                 logType = logType
+            )
+        )
+    }
+
+    private fun saveTapReset(tap: Tap) {
+        actionEventRepository.save(
+            ActionEvent(
+                tapId = tap.tapId,
+                barrelContent = tap.barrelContent,
+                currentLevel = tap.currentLevel,
+                totalUsage = 0L,
+                singleUsage = 0L,
+                logType = TAP_RESET
             )
         )
     }
