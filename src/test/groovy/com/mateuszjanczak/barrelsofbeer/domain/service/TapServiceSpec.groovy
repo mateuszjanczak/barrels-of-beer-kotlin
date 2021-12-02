@@ -166,6 +166,7 @@ class TapServiceSpec extends Specification {
         given:
         def tapId = 1
         def initTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 5000L, capacity: 30000L, enabled: true)
+        def resizedCapacityTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 105000L, capacity: 130000L, enabled: true)
         def sensorProperties = sensorProperties(currentLevel: 32000, temperature: 14.9f)
 
         when:
@@ -176,16 +177,15 @@ class TapServiceSpec extends Specification {
         noExceptionThrown()
 
         and:
-        1 * tapRepository.findById(tapId) >> {
+        2 * tapRepository.findById(tapId) >> {
             Optional.ofNullable(initTap)
         }
 
         and:
-        0 * tapRepository.save(_) >> _
+        1 * tapRepository.save(resizedCapacityTap) >> resizedCapacityTap
 
         and:
-        0 * eventService.saveEvent(_, _)
-        0 * eventService.saveEvent(_, _)
+        1 * eventService.saveEvent(resizedCapacityTap, TAP_SET)
     }
 
     def "Should save sensor properties but not logging the same current level"() {
