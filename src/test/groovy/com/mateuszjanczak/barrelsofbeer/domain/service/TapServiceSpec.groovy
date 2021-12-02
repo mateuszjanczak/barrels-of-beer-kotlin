@@ -163,12 +163,12 @@ class TapServiceSpec extends Specification {
         0 * eventService.saveEvent(_, _)
     }
 
-    def "Should not save sensor properties when calculated current level is below 0"() {
+    def "Should not save sensor properties when calculated current level is below 0 and automatically resize barrel"() {
         given:
         def tapId = 1
         def initTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 5000L, capacity: 30000L, enabled: true)
         def sensorProperties = sensorProperties(currentLevel: 32000, temperature: 14.9f)
-        def resizedCapacityTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 105000L, capacity: 130000L, enabled: true)
+        def resizedCapacityTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 35000L, capacity: 60000L, enabled: true)
 
         when:
         tapService.saveSensorProperties(tapId, sensorProperties)

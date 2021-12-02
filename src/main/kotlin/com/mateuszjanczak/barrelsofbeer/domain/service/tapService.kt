@@ -103,7 +103,7 @@ class DefaultTapService(
                     }
                     .let { log.warn("Tap $tapId has been updated with the following values: $sensorProperties") }
             } else {
-                setTap(tapId, TapDetails(ContentType.valueOf(previous.barrelContent.replace(' ', '_')), previous.capacity + 100000L))
+                setTap(tapId, TapDetails(ContentType.valueOf(previous.barrelContent.replace(' ', '_')), previous.capacity + 30000L))
             }
         }
     }
