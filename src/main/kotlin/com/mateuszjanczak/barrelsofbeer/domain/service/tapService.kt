@@ -14,6 +14,7 @@ import kotlin.math.abs
 interface TapService {
     fun createTap(tapId: Int)
     fun setTap(tapId: Int, tapDetails: TapDetails)
+    fun resetTap(tapId: Int)
     fun getTap(tapId: Int): Tap?
     fun getTapList(): List<Tap>
     fun saveSensorProperties(tapId: Int, sensorProperties: SensorProperties)
@@ -58,6 +59,22 @@ class DefaultTapService(
         }
     }
 
+    override fun resetTap(tapId: Int) {
+        tapRepository.findByIdOrNull(tapId)?.let { previous ->
+            tapRepository.save(
+                Tap(
+                    tapId = tapId,
+                    barrelContent = previous.barrelContent,
+                    currentLevel = 30000L,
+                    capacity = 30000L,
+                    enabled = previous.enabled
+                )
+            )
+                .let { next -> eventService.saveEvent(next, TAP_RESET) }
+                .let { log.warn("A reset of tap $tapId was detected and it was set to an empty barrel") }
+        }
+    }
+
     override fun getTap(tapId: Int): Tap? = tapRepository.findByIdOrNull(tapId)
 
     override fun getTapList(): List<Tap> = tapRepository.findAll()
@@ -65,7 +82,9 @@ class DefaultTapService(
     override fun saveSensorProperties(tapId: Int, sensorProperties: SensorProperties) {
         tapRepository.findByIdOrNull(tapId)?.let { previous ->
             val currentLevel = previous.capacity - sensorProperties.currentLevel
-            if(currentLevel > 0) {
+            if (previous.currentLevel < currentLevel) {
+                resetTap(1)
+            } else if (currentLevel > 0) {
                 tapRepository.save(
                     Tap(
                         tapId = previous.tapId,

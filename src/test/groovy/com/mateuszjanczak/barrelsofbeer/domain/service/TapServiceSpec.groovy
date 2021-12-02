@@ -10,6 +10,7 @@ import static com.mateuszjanczak.barrelsofbeer.common.ContentType.GAZDA_Marcowe
 import static com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_NEW
 import static com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ
 import static com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ_TEMPERATURE
+import static com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_RESET
 import static com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_SET
 import static com.mateuszjanczak.barrelsofbeer.fixtures.SensorPropertiesFixture.sensorProperties
 import static com.mateuszjanczak.barrelsofbeer.fixtures.TapDetailsFixture.tapDetails
@@ -166,8 +167,8 @@ class TapServiceSpec extends Specification {
         given:
         def tapId = 1
         def initTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 5000L, capacity: 30000L, enabled: true)
-        def resizedCapacityTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 105000L, capacity: 130000L, enabled: true)
         def sensorProperties = sensorProperties(currentLevel: 32000, temperature: 14.9f)
+        def resizedCapacityTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 13.9f, currentLevel: 105000L, capacity: 130000L, enabled: true)
 
         when:
         tapService.saveSensorProperties(tapId, sensorProperties)
@@ -240,6 +241,32 @@ class TapServiceSpec extends Specification {
         and:
         0 * eventService.saveEvent(finalTap, TAP_READ)
         0 * eventService.saveEvent(finalTap, TAP_READ_TEMPERATURE)
+    }
+
+    def "Should detect counter reset and empty the barrel"() {
+        given:
+        def tapId = 1
+        def initTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 14.5f, currentLevel: 25000L, capacity: 120000L, enabled: true)
+        def sensorProperties = sensorProperties(currentLevel: 100L, temperature: 13.9f)
+        def emptyBarrelTap = tap(tapId: 1, barrelContent: "GAZDA Marcowe", temperature: 0.0f, currentLevel: 30000L, capacity: 30000L, enabled: true)
+
+        when:
+        tapService.saveSensorProperties(tapId, sensorProperties)
+        sleep(500)
+
+        then:
+        noExceptionThrown()
+
+        and:
+        2 * tapRepository.findById(tapId) >> {
+            Optional.ofNullable(initTap)
+        }
+
+        and:
+        1 * tapRepository.save(emptyBarrelTap) >> emptyBarrelTap
+
+        and:
+        1 * eventService.saveEvent(emptyBarrelTap, TAP_RESET)
     }
 
     def "Should save sensor properties but not logging the same temperature"() {
