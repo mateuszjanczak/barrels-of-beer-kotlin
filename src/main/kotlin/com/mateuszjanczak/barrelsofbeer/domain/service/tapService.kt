@@ -46,8 +46,10 @@ class DefaultTapService(
                     Tap(
                         tapId = tapId,
                         barrelContent = tapDetails.contentTypeAsString,
+                        temperature = previous.temperature,
                         currentLevel = currentLevel,
-                        capacity = tapDetails.capacity
+                        capacity = tapDetails.capacity,
+                        enabled = previous.enabled
                     )
                 )
                     .let { next -> eventService.saveEvent(next, TAP_SET) }
