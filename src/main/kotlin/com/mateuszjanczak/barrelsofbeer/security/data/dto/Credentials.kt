@@ -4,6 +4,6 @@ import com.mateuszjanczak.barrelsofbeer.security.data.dto.validation.ValidPasswo
 import javax.validation.constraints.NotBlank
 
 data class Credentials(
-    @NotBlank val username: String,
-    @NotBlank @ValidPassword val password: String
+    @field:NotBlank(message = "Username cannot be empty.") val username: String,
+    @field:ValidPassword val password: String
 )
