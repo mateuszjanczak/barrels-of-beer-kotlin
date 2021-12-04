@@ -1,6 +1,5 @@
 package com.mateuszjanczak.barrelsofbeer.entrypoint
 
-import com.mateuszjanczak.barrelsofbeer.security.data.dto.Field
 import com.mateuszjanczak.barrelsofbeer.security.data.dto.ValidationErrorMessage
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,7 +12,7 @@ class ErrorController {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ValidationErrorMessage> {
-        val fields = e.bindingResult.fieldErrors.map { fieldError -> Field(fieldError.field, fieldError.defaultMessage!!.split(",")) }
+        val fields: Map<String, List<String>> = e.bindingResult.fieldErrors.groupBy { it.field }.mapValues { fieldError -> fieldError.value.map { error ->  error.defaultMessage!!} }
         return ResponseEntity(ValidationErrorMessage("Validation failed.", HttpStatus.BAD_REQUEST.name, fields), HttpStatus.BAD_REQUEST)
     }
 }

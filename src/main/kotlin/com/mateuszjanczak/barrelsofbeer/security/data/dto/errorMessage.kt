@@ -10,10 +10,5 @@ open class ErrorMessage(
 class ValidationErrorMessage(
     message: String,
     error: String,
-    val validation: List<Field>
+    val validation: Map<String, List<String>>
 ) : ErrorMessage(message, error)
-
-data class Field(
-    val field: String,
-    val errors: List<String>
-)
