@@ -1,7 +1,12 @@
 package com.mateuszjanczak.barrelsofbeer.domain.service
 
 import com.mateuszjanczak.barrelsofbeer.common.ContentType
-import com.mateuszjanczak.barrelsofbeer.common.LogType.*
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_NEW
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ_TEMPERATURE
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_RESET
+import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_SET
+import com.mateuszjanczak.barrelsofbeer.common.TapNotFoundException
 import com.mateuszjanczak.barrelsofbeer.domain.SensorProperties
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
 import com.mateuszjanczak.barrelsofbeer.domain.data.dto.TapDetails
@@ -75,7 +80,7 @@ class DefaultTapService(
         }
     }
 
-    override fun getTap(tapId: Int): Tap? = tapRepository.findByIdOrNull(tapId)
+    override fun getTap(tapId: Int): Tap? = tapRepository.findByTapId(tapId) ?: throw TapNotFoundException()
 
     override fun getTapList(): List<Tap> = tapRepository.findAll()
 

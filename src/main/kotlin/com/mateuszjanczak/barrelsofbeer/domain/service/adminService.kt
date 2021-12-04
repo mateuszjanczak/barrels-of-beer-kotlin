@@ -7,12 +7,12 @@ import com.mateuszjanczak.barrelsofbeer.common.TableType
 import com.mateuszjanczak.barrelsofbeer.common.TableType.ACTION_EVENTS
 import com.mateuszjanczak.barrelsofbeer.common.TableType.TAPS
 import com.mateuszjanczak.barrelsofbeer.common.TableType.TEMPERATURE_EVENTS
+import com.mateuszjanczak.barrelsofbeer.common.TapNotFoundException
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.ActionEventRepository
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TapRepository
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.TemperatureEventRepository
 import org.slf4j.LoggerFactory
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 interface AdminService {
@@ -34,7 +34,7 @@ class DefaultAdminService(
     }
 
     override fun toggleTap(tapId: Int, enabled: Boolean) {
-        tapRepository.findByIdOrNull(tapId)?.let { previous ->
+        findTap(tapId).let { previous ->
             tapRepository.save(
                 Tap(
                     tapId = previous.tapId,
@@ -52,7 +52,7 @@ class DefaultAdminService(
     }
 
     override fun removeTap(tapId: Int) {
-        tapRepository.findByIdOrNull(tapId)?.let { previous ->
+        findTap(tapId).let { previous ->
             tapRepository.deleteById(tapId).let {
                 eventService.saveEvent(previous, TAP_REMOVE)
                     .also { log.warn("Tap $tapId has been removed") }
@@ -67,4 +67,5 @@ class DefaultAdminService(
             TEMPERATURE_EVENTS -> temperatureEventRepository.deleteAll()
         }.also { log.warn("Table $tableType has been removed") }
 
+    private fun findTap(tapId: Int) = tapRepository.findByTapId(tapId) ?: throw TapNotFoundException()
 }

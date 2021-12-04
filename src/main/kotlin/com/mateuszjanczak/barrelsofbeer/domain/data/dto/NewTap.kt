@@ -1,8 +1,8 @@
 package com.mateuszjanczak.barrelsofbeer.domain.data.dto
 
 import org.hibernate.validator.constraints.Range
-import javax.validation.constraints.NotNull
 
 data class NewTap(
-    @Range(min = 1) @NotNull val tapId: Int
+    @field:Range(min = 1, message = "Tap id must be a positive number.")
+    val tapId: Int
 )
