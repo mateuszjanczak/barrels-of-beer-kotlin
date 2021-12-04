@@ -1,5 +1,8 @@
 package com.mateuszjanczak.barrelsofbeer.security.service
 
+import com.mateuszjanczak.barrelsofbeer.security.common.AccountNotEnabledException
+import com.mateuszjanczak.barrelsofbeer.security.common.InvalidPasswordException
+import com.mateuszjanczak.barrelsofbeer.security.common.UserNotFoundException
 import com.mateuszjanczak.barrelsofbeer.security.data.document.RefreshToken
 import com.mateuszjanczak.barrelsofbeer.security.data.dto.Credentials
 import com.mateuszjanczak.barrelsofbeer.security.data.dto.Token
@@ -24,11 +27,12 @@ class DefaultAuthService(
     private val refreshTokenRepository: RefreshTokenRepository
 ) : AuthService {
 
-    override fun login(credentials: Credentials): Token? =
-        extendedUserDetailsService.loadUserByUsername(credentials.username)
-            ?.takeIf { passwordEncoder.matches(credentials.password, it.password) }
-            ?.takeIf { it.isEnabled }
-            ?.let { createToken(it) }
+    override fun login(credentials: Credentials): Token? {
+        val user: ExtendedUserDetails = extendedUserDetailsService.loadUserByUsername(credentials.username) ?: throw UserNotFoundException()
+        if(!passwordEncoder.matches(credentials.password, user.password)) throw InvalidPasswordException()
+        if(!user.isEnabled) throw AccountNotEnabledException()
+        return createToken(user)
+    }
 
     override fun refreshToken(refreshToken: String): Token? =
         refreshTokenRepository.findByRefreshToken(refreshToken)
