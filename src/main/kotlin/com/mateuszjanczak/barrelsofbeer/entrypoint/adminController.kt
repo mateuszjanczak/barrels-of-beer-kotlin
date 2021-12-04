@@ -1,23 +1,18 @@
 package com.mateuszjanczak.barrelsofbeer.entrypoint
 
 import com.mateuszjanczak.barrelsofbeer.common.TableType
-import com.mateuszjanczak.barrelsofbeer.domain.data.dto.ErrorMessage
 import com.mateuszjanczak.barrelsofbeer.domain.service.AdminService
 import com.mateuszjanczak.barrelsofbeer.entrypoint.AdminEndpoints.ADMIN_DISABLE_TAP
 import com.mateuszjanczak.barrelsofbeer.entrypoint.AdminEndpoints.ADMIN_ENABLE_TAP
 import com.mateuszjanczak.barrelsofbeer.entrypoint.AdminEndpoints.ADMIN_REMOVE_TAP
 import com.mateuszjanczak.barrelsofbeer.entrypoint.AdminEndpoints.ADMIN_RESET_DATABASE
-import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
-import org.springframework.http.ResponseEntity.status
 import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 
 @RestController
 @CrossOrigin
@@ -41,10 +36,6 @@ class AdminController(
     @PostMapping(ADMIN_RESET_DATABASE)
     fun resetDatabase(@PathVariable tableType: TableType): ResponseEntity<Unit> =
         ok(adminService.resetDatabase(tableType))
-
-    @ExceptionHandler
-    fun handleMethodArgumentTypeMismatchException(e: MethodArgumentTypeMismatchException) =
-        status(BAD_REQUEST).body(ErrorMessage("MethodArgumentTypeMismatchException", BAD_REQUEST.name))
 }
 
 object AdminEndpoints {

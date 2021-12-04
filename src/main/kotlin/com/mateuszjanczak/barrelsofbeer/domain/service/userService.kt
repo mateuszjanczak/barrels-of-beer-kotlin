@@ -2,8 +2,8 @@ package com.mateuszjanczak.barrelsofbeer.domain.service
 
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.User
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.UserRepository
+import com.mateuszjanczak.barrelsofbeer.security.common.UserNotFoundException
 import com.mateuszjanczak.barrelsofbeer.security.data.dto.Credentials
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -34,14 +34,14 @@ class DefaultUserService(
 
     override fun getUsers(): List<User> = userRepository.findAll()
 
-    override fun getUserById(id: String): User? = userRepository.findByIdOrNull(id)
+    override fun getUserById(id: String) = userRepository.findUserById(id) ?: throw UserNotFoundException()
 
-    override fun getUserByUsername(username: String): User? = userRepository.findByUsername(username)
+    override fun getUserByUsername(username: String): User = userRepository.findByUsername(username) ?: throw UserNotFoundException()
 
-    override fun removeUser(userId: String) = userRepository.deleteById(userId)
+    override fun removeUser(userId: String) = getUserById(userId).let { userRepository.deleteById(userId) }
 
     override fun toggleUserStatus(userId: String, enabled: Boolean) {
-        userRepository.findByIdOrNull(userId)?.let { previous ->
+        getUserById(userId).let { previous ->
             userRepository.save(
                 User(
                     id = previous.id,
