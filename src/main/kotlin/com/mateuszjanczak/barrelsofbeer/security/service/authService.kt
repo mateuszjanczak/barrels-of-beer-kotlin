@@ -37,7 +37,7 @@ class DefaultAuthService(
 
     override fun refreshToken(refreshToken: String): Token? {
         val token = refreshTokenRepository.findByRefreshToken(refreshToken) ?: throw TokenNotFoundException()
-        val user = extendedUserDetailsService.loadUserByUsername(token.userId) ?: throw UserNotFoundException()
+        val user = extendedUserDetailsService.getUserById(token.userId) ?: throw UserNotFoundException()
         return createToken(user)
     }
 

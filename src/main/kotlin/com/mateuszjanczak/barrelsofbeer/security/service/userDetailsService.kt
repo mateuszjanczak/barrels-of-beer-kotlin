@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service
 
 interface ExtendedUserDetailsService : UserDetailsService {
     override fun loadUserByUsername(username: String): ExtendedUserDetails?
+    fun getUserById(userId: String): ExtendedUserDetails?
 }
 
 @Service
@@ -17,6 +18,16 @@ class DefaultUserDetailsService(
 
     override fun loadUserByUsername(username: String): ExtendedUserDetails? =
         userRepository.findByUsername(username)?.let {
+            DefaultUserDetails(
+                id = it.id,
+                username = it.username,
+                password = it.password,
+                enabled = it.enabled
+            )
+        }
+
+    override fun getUserById(userId: String): ExtendedUserDetails? =
+        userRepository.findUserById(userId)?.let {
             DefaultUserDetails(
                 id = it.id,
                 username = it.username,
