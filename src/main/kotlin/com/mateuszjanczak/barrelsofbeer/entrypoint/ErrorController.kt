@@ -73,6 +73,6 @@ class ErrorController {
 
     @ExceptionHandler(TokenNotFoundException::class)
     fun handleTokenNotFoundException(e: TokenNotFoundException): ResponseEntity<ErrorMessage> {
-        return ResponseEntity(ErrorMessage("Token not found.", HttpStatus.BAD_REQUEST.name), HttpStatus.BAD_REQUEST)
+        return ResponseEntity(ErrorMessage("Token not found.", HttpStatus.NOT_FOUND.name), HttpStatus.BAD_REQUEST)
     }
 }

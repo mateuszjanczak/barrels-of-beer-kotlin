@@ -7,6 +7,7 @@ import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.ENABLE_USER
 import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.USERS
 import com.mateuszjanczak.barrelsofbeer.entrypoint.UserEndpoints.USER_ID
 import com.mateuszjanczak.barrelsofbeer.security.data.dto.Credentials
+import org.springframework.http.HttpStatus
 
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
@@ -34,7 +35,7 @@ class UserController(
     fun getUsers(): ResponseEntity<List<User>> = ok(userService.getUsers())
 
     @PostMapping(USERS)
-    fun createUser(@Valid @RequestBody credentials: Credentials): ResponseEntity<Unit> = ok(userService.createUser(credentials))
+    fun createUser(@Valid @RequestBody credentials: Credentials): ResponseEntity<Unit> = ResponseEntity(userService.createUser(credentials), HttpStatus.CREATED)
 
     @PostMapping(ENABLE_USER)
     fun enableUser(@PathVariable userId: String): ResponseEntity<Unit> = ok(userService.toggleUserStatus(userId, true))
@@ -43,7 +44,7 @@ class UserController(
     fun disableUser(@PathVariable userId: String): ResponseEntity<Unit> = ok(userService.toggleUserStatus(userId, false))
 
     @DeleteMapping(USER_ID)
-    fun removeUser(@PathVariable userId: String): ResponseEntity<Unit> = ok(userService.removeUser(userId))
+    fun removeUser(@PathVariable userId: String): ResponseEntity<Unit> = ResponseEntity(userService.removeUser(userId), HttpStatus.NO_CONTENT)
 
 }
 
