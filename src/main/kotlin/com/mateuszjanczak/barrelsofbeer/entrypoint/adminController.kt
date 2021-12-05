@@ -6,9 +6,11 @@ import com.mateuszjanczak.barrelsofbeer.entrypoint.AdminEndpoints.ADMIN_DISABLE_
 import com.mateuszjanczak.barrelsofbeer.entrypoint.AdminEndpoints.ADMIN_ENABLE_TAP
 import com.mateuszjanczak.barrelsofbeer.entrypoint.AdminEndpoints.ADMIN_REMOVE_TAP
 import com.mateuszjanczak.barrelsofbeer.entrypoint.AdminEndpoints.ADMIN_RESET_DATABASE
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -29,9 +31,9 @@ class AdminController(
     fun disableTap(@PathVariable tapId: Int): ResponseEntity<Unit> =
         ok(adminService.toggleTap(tapId, false))
 
-    @PostMapping(ADMIN_REMOVE_TAP)
+    @DeleteMapping(ADMIN_REMOVE_TAP)
     fun removeTap(@PathVariable tapId: Int): ResponseEntity<Unit> =
-        ok(adminService.removeTap(tapId))
+        ResponseEntity(adminService.removeTap(tapId), HttpStatus.NO_CONTENT)
 
     @PostMapping(ADMIN_RESET_DATABASE)
     fun resetDatabase(@PathVariable tableType: TableType): ResponseEntity<Unit> =
