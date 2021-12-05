@@ -6,6 +6,7 @@ import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_READ_TEMPERATURE
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_RESET
 import com.mateuszjanczak.barrelsofbeer.common.LogType.TAP_SET
+import com.mateuszjanczak.barrelsofbeer.common.TapAlreadyExistsException
 import com.mateuszjanczak.barrelsofbeer.common.TapNotFoundException
 import com.mateuszjanczak.barrelsofbeer.domain.SensorProperties
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.Tap
@@ -36,6 +37,7 @@ class DefaultTapService(
     }
 
     override fun createTap(tapId: Int) {
+        if(tapRepository.existsByTapId(tapId)) throw TapAlreadyExistsException()
         tapRepository.save(
             Tap(tapId)
         )

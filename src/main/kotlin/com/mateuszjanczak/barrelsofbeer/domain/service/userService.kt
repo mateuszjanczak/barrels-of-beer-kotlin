@@ -1,5 +1,6 @@
 package com.mateuszjanczak.barrelsofbeer.domain.service
 
+import com.mateuszjanczak.barrelsofbeer.common.UserAlreadyExistsException
 import com.mateuszjanczak.barrelsofbeer.domain.data.document.User
 import com.mateuszjanczak.barrelsofbeer.domain.data.repository.UserRepository
 import com.mateuszjanczak.barrelsofbeer.security.common.UserNotFoundException
@@ -23,6 +24,7 @@ class DefaultUserService(
 ) : UserService {
 
     override fun createUser(credentials: Credentials) {
+        if(userRepository.existsByUsername(credentials.username)) throw UserAlreadyExistsException()
         userRepository.save(
             User(
                 username = credentials.username,

@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface TapRepository : MongoRepository<Tap, Int> {
     fun findByTapId(tapId: Int): Tap?
+    fun existsByTapId(tapId: Int): Boolean
 }

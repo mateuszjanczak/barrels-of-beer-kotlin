@@ -6,3 +6,5 @@ class SensorHttpClientException @JvmOverloads constructor(
 ) : RuntimeException(message, cause)
 
 class TapNotFoundException : RuntimeException("TapNotFoundException")
+class UserAlreadyExistsException : RuntimeException("UserAlreadyExistsException")
+class TapAlreadyExistsException : RuntimeException("TapAlreadyExistsException")
