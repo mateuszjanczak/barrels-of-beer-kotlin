@@ -5,6 +5,7 @@ import com.mateuszjanczak.barrelsofbeer.common.TapNotFoundException
 import com.mateuszjanczak.barrelsofbeer.common.UserAlreadyExistsException
 import com.mateuszjanczak.barrelsofbeer.security.common.AccountNotEnabledException
 import com.mateuszjanczak.barrelsofbeer.security.common.InvalidPasswordException
+import com.mateuszjanczak.barrelsofbeer.security.common.TokenNotFoundException
 import com.mateuszjanczak.barrelsofbeer.security.common.UserNotFoundException
 import com.mateuszjanczak.barrelsofbeer.security.data.dto.ErrorMessage
 import com.mateuszjanczak.barrelsofbeer.security.data.dto.ValidationErrorMessage
@@ -42,7 +43,7 @@ class ErrorController {
 
     @ExceptionHandler(UserNotFoundException::class)
     fun handleUserNotFoundException(e: UserNotFoundException): ResponseEntity<ErrorMessage> {
-        return ResponseEntity(ErrorMessage("User not found.", HttpStatus.BAD_REQUEST.name), HttpStatus.BAD_REQUEST)
+        return ResponseEntity(ErrorMessage("User not found.", HttpStatus.NOT_FOUND.name), HttpStatus.NOT_FOUND)
     }
 
     @ExceptionHandler(UserAlreadyExistsException::class)
@@ -62,11 +63,16 @@ class ErrorController {
 
     @ExceptionHandler(TapNotFoundException::class)
     fun handleTapNotFoundException(e: TapNotFoundException): ResponseEntity<ErrorMessage> {
-        return ResponseEntity(ErrorMessage("Tap not found.", HttpStatus.BAD_REQUEST.name), HttpStatus.BAD_REQUEST)
+        return ResponseEntity(ErrorMessage("Tap not found.", HttpStatus.NOT_FOUND.name), HttpStatus.NOT_FOUND)
     }
 
     @ExceptionHandler(TapAlreadyExistsException::class)
     fun handleTapAlreadyExistsException(e: TapAlreadyExistsException): ResponseEntity<ErrorMessage> {
         return ResponseEntity(ErrorMessage("Tap already exists.", HttpStatus.BAD_REQUEST.name), HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(TokenNotFoundException::class)
+    fun handleTokenNotFoundException(e: TokenNotFoundException): ResponseEntity<ErrorMessage> {
+        return ResponseEntity(ErrorMessage("Token not found.", HttpStatus.BAD_REQUEST.name), HttpStatus.BAD_REQUEST)
     }
 }

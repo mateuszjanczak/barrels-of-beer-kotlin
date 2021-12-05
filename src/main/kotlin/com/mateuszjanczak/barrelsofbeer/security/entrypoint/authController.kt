@@ -6,9 +6,11 @@ import com.mateuszjanczak.barrelsofbeer.security.entrypoint.AuthEndpoints.LOGIN
 import com.mateuszjanczak.barrelsofbeer.security.entrypoint.AuthEndpoints.REFRESH_TOKEN
 import com.mateuszjanczak.barrelsofbeer.security.entrypoint.AuthEndpoints.REMOVE_REFRESH_TOKEN
 import com.mateuszjanczak.barrelsofbeer.security.service.AuthService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -28,8 +30,8 @@ class AuthController(
     @PostMapping(REFRESH_TOKEN)
     fun refreshToken(@PathVariable refreshToken: String): ResponseEntity<Token> = ok(authService.refreshToken(refreshToken))
 
-    @PostMapping(REMOVE_REFRESH_TOKEN)
-    fun removeRefreshToken(@PathVariable refreshToken: String): ResponseEntity<Unit> = ok(authService.removeRefreshToken(refreshToken))
+    @DeleteMapping(REMOVE_REFRESH_TOKEN)
+    fun removeRefreshToken(@PathVariable refreshToken: String): ResponseEntity<Unit> = ResponseEntity(authService.removeRefreshToken(refreshToken), HttpStatus.NO_CONTENT)
 
 }
 

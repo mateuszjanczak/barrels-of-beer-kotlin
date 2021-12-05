@@ -6,6 +6,7 @@ import com.mateuszjanczak.barrelsofbeer.domain.data.dto.TapDetails
 import com.mateuszjanczak.barrelsofbeer.domain.service.TapService
 import com.mateuszjanczak.barrelsofbeer.entrypoint.TapEndpoints.TAPS
 import com.mateuszjanczak.barrelsofbeer.entrypoint.TapEndpoints.TAP_ID
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -31,7 +32,7 @@ class TapController(
     fun getTaps(): ResponseEntity<List<Tap>> = ok(tapService.getTapList())
 
     @PostMapping(TAPS)
-    fun createTap(@Valid @RequestBody newTap: NewTap): ResponseEntity<Unit> = ok(tapService.createTap(newTap.tapId))
+    fun createTap(@Valid @RequestBody newTap: NewTap): ResponseEntity<Unit> = ResponseEntity(tapService.createTap(newTap.tapId), HttpStatus.CREATED)
 
     @PostMapping(TAP_ID)
     fun setTap(@PathVariable tapId: Int, @Valid @RequestBody tapDetails: TapDetails): ResponseEntity<Unit> =
