@@ -1,6 +1,8 @@
 package com.mateuszjanczak.barrelsofbeer.entrypoint
 
+import com.mateuszjanczak.barrelsofbeer.common.TapAlreadyExistsException
 import com.mateuszjanczak.barrelsofbeer.common.TapNotFoundException
+import com.mateuszjanczak.barrelsofbeer.common.UserAlreadyExistsException
 import com.mateuszjanczak.barrelsofbeer.security.common.AccountNotEnabledException
 import com.mateuszjanczak.barrelsofbeer.security.common.InvalidPasswordException
 import com.mateuszjanczak.barrelsofbeer.security.common.UserNotFoundException
@@ -43,6 +45,11 @@ class ErrorController {
         return ResponseEntity(ErrorMessage("User not found.", HttpStatus.BAD_REQUEST.name), HttpStatus.BAD_REQUEST)
     }
 
+    @ExceptionHandler(UserAlreadyExistsException::class)
+    fun handleUserAlreadyExistsException(e: UserAlreadyExistsException): ResponseEntity<ErrorMessage> {
+        return ResponseEntity(ErrorMessage("User already exists.", HttpStatus.BAD_REQUEST.name), HttpStatus.BAD_REQUEST)
+    }
+
     @ExceptionHandler(InvalidPasswordException::class)
     fun handleInvalidPasswordException(e: InvalidPasswordException): ResponseEntity<ErrorMessage> {
         return ResponseEntity(ErrorMessage("Invalid password.", HttpStatus.BAD_REQUEST.name), HttpStatus.BAD_REQUEST)
@@ -56,5 +63,10 @@ class ErrorController {
     @ExceptionHandler(TapNotFoundException::class)
     fun handleTapNotFoundException(e: TapNotFoundException): ResponseEntity<ErrorMessage> {
         return ResponseEntity(ErrorMessage("Tap not found.", HttpStatus.BAD_REQUEST.name), HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(TapAlreadyExistsException::class)
+    fun handleTapAlreadyExistsException(e: TapAlreadyExistsException): ResponseEntity<ErrorMessage> {
+        return ResponseEntity(ErrorMessage("Tap already exists.", HttpStatus.BAD_REQUEST.name), HttpStatus.BAD_REQUEST)
     }
 }
