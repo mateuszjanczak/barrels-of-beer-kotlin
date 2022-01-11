@@ -45,8 +45,9 @@ class DefaultAdminService(
                     enabled = enabled
                 )
             ).let { next ->
-                eventService.saveEvent(next, if (enabled) TAP_ENABLE else TAP_DISABLE)
-                log.warn("Tap $tapId status changed to {}", if (enabled) TAP_ENABLE else TAP_DISABLE)
+                val eventType = if (enabled) TAP_ENABLE else TAP_DISABLE
+                eventService.saveEvent(next, eventType)
+                log.warn("Tap $tapId status changed to {}", eventType)
             }
         }
     }

@@ -45,6 +45,5 @@ class SensorSpec extends Specification {
         1 * client.getSensorResponse(1) >> {
             sensorResponse(data: srData(value: 's0m3th1ng'))
         }
-
     }
 }
