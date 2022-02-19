@@ -90,7 +90,7 @@ class DefaultTapService(
         tapRepository.findByIdOrNull(tapId)?.let { previous ->
             val currentLevel = previous.capacity - sensorProperties.currentLevel
             if (previous.currentLevel < currentLevel) {
-                resetTap(1)
+                resetTap(tapId)
             } else if (currentLevel > 0) {
                 tapRepository.save(
                     Tap(
